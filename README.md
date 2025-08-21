@@ -101,10 +101,12 @@ This design reflects a shift toward modern, containerized infrastructure with au
 ## Automation Pipeline Diagram
 
 <p align="center">
-  <a href="docs/automation-pipeline.png" target="_blank">
-    <img src="docs/automation-pipeline.png" alt="Automation Pipeline" width="500">
+  <a href="https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/docs/automation-pipeline.png" target="_blank">
+    <img src="docs/automation-pipeline.png" alt="Automation Pipeline Diagram" width="500">
   </a>
 </p>
+
+📎 [View full-size diagram](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/docs/automation-pipeline.png)
 
 ---
 
