@@ -142,6 +142,7 @@ The complete pipeline definition is available in [`.gitlab-ci.yml`](https://gith
 ---
 
 ## 🗂️ Repository Structure
+```text
 automation-pipeline-challenge-c3/
 ├── ansible/
 │ ├── inventories/
@@ -182,7 +183,7 @@ automation-pipeline-challenge-c3/
 ├── automation-pipeline.png
 
 └── submission.pdf
-
+```
 [🔝 Back to Quick Links](#-quick-links)
 
 ```
