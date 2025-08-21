@@ -37,12 +37,6 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/docs/submission.pdf">
-    <img src="https://img.shields.io/badge/Submission-PDF-informational" alt="View project submission PDF">
-  </a>
-</p>
-
-<p align="center">
   <a href="https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/docs/submission.pdf" target="_blank">
     <img src="https://img.shields.io/badge/Submission-PDF-informational" alt="View project submission PDF">
   </a>
@@ -51,6 +45,7 @@
 <p align="center">
   📎 <a href="https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/docs/submission.pdf" target="_blank">View Full Submission Document (PDF)</a>
 </p>
+ 
 
 ---
 
