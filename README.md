@@ -1,3 +1,5 @@
+[![Lint](https://github.com/joycemwangi/automation-pipeline-challenge-c3/actions/workflows/lint.yml/badge.svg?branch=main)](https://github.com/joycemwangi/automation-pipeline-challenge-c3/actions/workflows/lint.yml)
+
 # **Automation Pipeline Challenge C3**
 
 <p align="center">
