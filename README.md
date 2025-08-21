@@ -142,42 +142,49 @@ The complete pipeline definition is available in [`.gitlab-ci.yml`](https://gith
 ---
 
 ## 🗂️ Repository Structure
-```text
 automation-pipeline-challenge-c3/
 ├── ansible/
-│   ├── inventories/
-│   │   └── hosts.ini
-│   ├── group_vars/
-│   │   └── all.yml
-│   ├── roles/
-│   │   ├── nginx/
-│   │   │   ├── tasks/main.yml
-│   │   │   └── templates/
-│   │   │       ├── nginx.conf.j2
-│   │   │       └── site.conf.j2
-│   │   ├── zabbix_agent/
-│   │   │   ├── tasks/main.yml
-│   │   │   └── templates/zabbix_agentd.conf.j2
-│   │   └── maintenance/
-│   │       └── tasks/main.yml
-│   ├── playbooks/
-│   │   ├── site.yml
-│   │   ├── maintenance.yml
-│   │   └── certs_create.yml
-│   └── ansible.cfg
+│ ├── inventories/
+│ │ └── hosts.ini
+│ ├── group_vars/
+│ │ └── all.yml
+│ ├── roles/
+│ │ ├── nginx
+/
+│ │ ├── zabbix_agent
+/
+│ │ └── maintenance
+/
+│ ├── playbooks/
+│ │ ├── site.yml
+
+│ │ ├── maintenance.yml
+
+│ │ └── certs_create.yml
+
+│ └── ansible.cfg
 ├── demo-api/
-│   ├── Dockerfile
-│   ├── package.json
-│   ├── server.js
-│   └── helm/
-│       └── demo-media-api/
-│           ├── README.md
-│           └── templates/_helpers.tpl
+│ ├── Dockerfile
+│ ├── package.json
+│ ├── server.js
+│ └── helm/
+│ └── demo-media-api/
+│ ├── values-dev.yaml
+
+│ ├── values-staging.yaml
+
+│ └── values-prod.yaml
+
 ├── .gitlab-ci.yml
+
 ├── README.md
 └── docs/
-    ├── automation-pipeline.png
-    └── submission.pdf
+├── automation-pipeline.png
+
+└── submission.pdf
+
+[🔝 Back to Quick Links](#-quick-links)
+
 ```
 
 ## **How the Roles Work**
