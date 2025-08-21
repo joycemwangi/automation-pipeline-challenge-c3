@@ -23,6 +23,14 @@
     <img src="https://img.shields.io/badge/Python-3.11+-blue" alt="Python version 3.11 or higher">
   </a>
   &nbsp;
+  <a href="https://kubernetes.io/">
+    <img src="https://img.shields.io/badge/Kubernetes-1.27+-informational?logo=kubernetes" alt="Kubernetes version 1.27 or higher">
+  </a>
+  &nbsp;
+  <a href="https://helm.sh/">
+    <img src="https://img.shields.io/badge/Helm-3.12+-informational?logo=helm" alt="Helm version 3.12 or higher">
+  </a>
+  &nbsp;
   <a href="https://about.gitlab.com/stages-devops-lifecycle/continuous-integration/">
     <img src="https://img.shields.io/badge/GitLab-CI/CD-orange" alt="GitLab Continuous Integration and Deployment">
   </a>
