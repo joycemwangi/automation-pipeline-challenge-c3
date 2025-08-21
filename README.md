@@ -51,33 +51,33 @@ It reflects a transition toward a modern, containerized environment with automat
 ---
 
 ## 🔧 Tech Stack
-- **Infrastructure as Code & Automation**: Ansible, Python, Bash  
-- **Containerization & Orchestration**: Kubernetes, Helm, Docker  
-- **Monitoring & Observability**: Zabbix Agent (system health and alerting)  
-- **CI/CD Pipeline**: GitLab CI/CD for validation, build, deploy, smoke testing, and rollback  
-- **Web & API Services**: Nginx (HTTPS, SSL certs), Node.js demo API  
-- **Version Control & Collaboration**: GitHub, GitLab, Git  
+- Infrastructure as Code & Automation: Ansible, Python, Bash  
+- Containerization & Orchestration: Kubernetes, Helm, Docker  
+- Monitoring & Observability: Zabbix Agent (system health and alerting)  
+- CI/CD Pipeline: GitLab CI/CD for validation, build, deploy, smoke testing, and rollback  
+- Web & API Services: Nginx (HTTPS, SSL certs), Node.js demo API  
+- Version Control & Collaboration: GitHub, GitLab, Git  
 
 ---
 
 ## 🌟 Key Features
-- **End-to-End Automation** – Infrastructure provisioning, configuration management, and CI/CD pipeline in one workflow.  
-- **Secure by Design** – Automated HTTPS, SSL certificate handling, and hardened configurations.  
-- **Proactive Monitoring** – Integrated Zabbix Agent for real-time health checks and alerting.  
-- **Kubernetes-Ready** – Helm charts and Kubernetes deployments for scalability across environments.  
-- **Resilient Deployments** – GitLab pipeline enables validation, smoke testing, gated promotions, and rollback.  
-- **Operational Efficiency** – Automated OS patching, reboot workflows, and repeatable deployments reduce manual effort.  
+- End-to-End Automation – Infrastructure provisioning, configuration management, and CI/CD pipeline in one workflow.  
+- Secure by Design – Automated HTTPS, SSL certificate handling, and hardened configurations.  
+- Proactive Monitoring – Integrated Zabbix Agent for real-time health checks and alerting.  
+- Kubernetes-Ready – Helm charts and Kubernetes deployments for scalability across environments.  
+- Resilient Deployments – GitLab pipeline enables validation, smoke testing, gated promotions, and rollback.  
+- Operational Efficiency – Automated OS patching, reboot workflows, and repeatable deployments reduce manual effort.  
 
 ---
 
 ## **Implementation Details**
-- **Infrastructure as Code**: Ansible playbooks and roles to provision and configure a load balancer, application servers, and monitoring agents.  
-- **Role-Based Configuration Management**: Modular roles for Nginx, Zabbix Agent, and maintenance tasks enable reusability and easier maintenance.  
-- **Security & HTTPS Support**: Automated SSL certificate creation and integration with Nginx for secure API access.  
-- **Observability**: Zabbix Agent deployment and configuration for real-time monitoring and system health tracking.  
-- **Automated Maintenance**: Playbooks to apply the latest OS patches and reboot servers automatically.  
-- **CI/CD Integration**: GitLab pipeline with validation, Kubernetes deployment, smoke testing, promotion between environments, and rollback.  
-- **Multi-Environment Support**: Flexible inventory and variable structure for dev, staging, and production without code changes.  
+- Infrastructure as Code: Ansible playbooks and roles to provision and configure a load balancer, application servers, and monitoring agents.  
+- Role-Based Configuration Management: Modular roles for Nginx, Zabbix Agent, and maintenance tasks enable reusability and easier maintenance.  
+- Security & HTTPS Support: Automated SSL certificate creation and integration with Nginx for secure API access.  
+- Observability: Zabbix Agent deployment and configuration for real-time monitoring and system health tracking.  
+- Automated Maintenance: Playbooks to apply the latest OS patches and reboot servers automatically.  
+- CI/CD Integration: GitLab pipeline with validation, Kubernetes deployment, smoke testing, promotion between environments, and rollback.  
+- Multi-Environment Support: Flexible inventory and variable structure for dev, staging, and production without code changes.  
 
 ---
 
@@ -85,13 +85,13 @@ It reflects a transition toward a modern, containerized environment with automat
 This project demonstrates an end-to-end automation workflow for deploying and managing Linux-based infrastructure and application services.  
 
 The solution emphasizes:  
-- **Automation** – Ansible playbooks and roles provide consistent provisioning, configuration, and maintenance.  
-- **Security & Reliability** – HTTPS setup, SSL certificates, and hardened system configurations.  
-- **Observability** – Integration of Zabbix Agent for real-time health and performance tracking.  
-- **Scalability** – Kubernetes + Helm enable repeatable deployments across dev, staging, and production.  
-- **CI/CD Excellence** – GitLab pipeline automates validation, builds, deployments, smoke tests, promotions, and rollbacks.  
+- Automation – Ansible playbooks and roles provide consistent provisioning, configuration, and maintenance.  
+- Security & Reliability – HTTPS setup, SSL certificates, and hardened system configurations.  
+- Observability – Integration of Zabbix Agent for real-time health and performance tracking.  
+- Scalability – Kubernetes + Helm enable repeatable deployments across dev, staging, and production.  
+- CI/CD Excellence – GitLab pipeline automates validation, builds, deployments, smoke tests, promotions, and rollbacks.  
 
-This design reflects a shift toward **modern, containerized infrastructure** with automation, observability, and operational resilience as core principles.  
+This design reflects a shift toward modern, containerized infrastructure with automation, observability, and operational resilience as core principles.  
 
 ---
 
@@ -102,6 +102,16 @@ This design reflects a shift toward **modern, containerized infrastructure** wit
     <img src="docs/automation-pipeline.png" alt="Automation Pipeline" width="500">
   </a>
 </p>
+
+---
+
+## 🔒 Secrets & Config
+- Store secrets as masked GitLab CI/CD variables: `KUBE_CONFIG`, `HELM_REPO_AUTH`, `ANSIBLE_VAULT_PASSWORD`  
+- Use Kubernetes Secrets or GitLab Vault for sensitive values.  
+- Environment configs:
+  - Separate Helm values files (`values-dev.yaml`, `values-staging.yaml`, `values-prod.yaml`)  
+  - Or use GitLab environment variables.  
+- No hardcoding of credentials or keys in version control.  
 
 ---
 ## Repository Structure
