@@ -259,13 +259,13 @@ The complete pipeline definition is available in [`.gitlab-ci.yml`](./.gitlab-ci
 - **promote** – Manual approvals for staging → prod promotion.
 - **rollback** – Manual Helm rollback to previous release.
 
-**Secrets & Config**
-- Store secrets as masked GitLab CI/CD variables:
-  `KUBE_CONFIG`, `HELM_REPO_AUTH`, `ANSIBLE_VAULT_PASSWORD`
-- Use Kubernetes Secrets or GitLab Vault for sensitive values.
-- Environment configs:
-  - Separate Helm values files (`values-dev.yaml`, `values-staging.yaml`, `values-prod.yaml`)
-  - Or use GitLab environment variables.
+## 🔒 Secrets & Config
+
+- **Secrets Management** – All sensitive values are stored as **masked GitLab CI/CD variables** (`KUBE_CONFIG`, `HELM_REPO_AUTH`, `ANSIBLE_VAULT_PASSWORD`).  
+- **Kubernetes Secrets & GitLab Vault** – Used for sensitive runtime values such as certificates, credentials, and API tokens.  
+- **Environment-Specific Configs** – Separate Helm values files (`values-dev.yaml`, `values-staging.yaml`, `values-prod.yaml`) to isolate dev, staging, and production environments.  
+- **No Hardcoding** – No passwords, tokens, or keys are stored in playbooks or version control.  
+- **Best Practices** – Combined HTTPS, SSL certificate automation, and RBAC to ensure secure deployment pipelines.  
 
 **Rollback Strategy**
 - **Helm**: `helm rollback` to a previous release.
