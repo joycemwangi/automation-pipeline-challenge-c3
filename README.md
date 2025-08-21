@@ -1,34 +1,36 @@
-[![Lint](https://github.com/joycemwangi/automation-pipeline-challenge-c3/actions/workflows/lint.yml/badge.svg?branch=main)](https://github.com/joycemwangi/automation-pipeline-challenge-c3/actions/workflows/lint.yml)
-
 # **Automation Pipeline Challenge C3**
 
 <p align="center">
+  <a href="https://github.com/joycemwangi/automation-pipeline-challenge-c3/actions/workflows/lint.yml">
+    <img src="https://github.com/joycemwangi/automation-pipeline-ch3/actions/workflows/lint.yml/badge.svg?branch=main" alt="Lint status (GitHub Actions)">
+  </a>
+  &nbsp;
   <a href="https://codesandbox.io/p/github/joycemwangi/automation-pipeline-challenge-c3/main" target="_blank">
-    <img src="https://img.shields.io/badge/Open%20in-CodeSandbox-blue?logo=codesandbox" alt="Open in CodeSandbox">
+    <img src="https://img.shields.io/badge/Open%20in-CodeSandbox-blue?logo=codesandbox" alt="Open project in CodeSandbox">
   </a>
   &nbsp;
   <a href="https://kncqz4-8080.csb.app/healthz" target="_blank">
-    <img src="https://img.shields.io/badge/Live%20Demo-OK-green" alt="Live Demo (/healthz)">
+    <img src="https://img.shields.io/badge/Live%20Demo-OK-green" alt="Live Demo Health Check">
   </a>
 </p>
 
 <p align="center">
   <a href="https://www.ansible.com/">
-    <img src="https://img.shields.io/badge/Ansible-2.14+-blue" alt="Ansible">
+    <img src="https://img.shields.io/badge/Ansible-2.14+-blue" alt="Ansible version 2.14 or higher">
   </a>
   &nbsp;
   <a href="https://www.python.org/">
-    <img src="https://img.shields.io/badge/Python-3.11+-blue" alt="Python">
+    <img src="https://img.shields.io/badge/Python-3.11+-blue" alt="Python version 3.11 or higher">
   </a>
   &nbsp;
   <a href="https://about.gitlab.com/stages-devops-lifecycle/continuous-integration/">
-    <img src="https://img.shields.io/badge/GitLab-CI/CD-orange" alt="GitLab CI/CD">
+    <img src="https://img.shields.io/badge/GitLab-CI/CD-orange" alt="GitLab Continuous Integration and Deployment">
   </a>
 </p>
 
 <p align="center">
   <a href="https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/docs/submission.pdf">
-    <img src="https://img.shields.io/badge/Submission-PDF-informational" alt="View Submission PDF">
+    <img src="https://img.shields.io/badge/Submission-PDF-informational" alt="View project submission PDF">
   </a>
 </p>
 
