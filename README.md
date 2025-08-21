@@ -45,18 +45,17 @@
 <p align="center">
   📎 <a href="https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/docs/submission.pdf" target="_blank">View Full Submission Document (PDF)</a>
 </p>
- 
 
 ---
 
 ## 🔗 Quick Links
-- [Overview](#overview)  
-- [Tech Stack](#-tech-stack)  
-- [Key Features](#-key-features)  
-- [CI/CD Pipeline](#cicd-pipeline-gitlab)  
-- [Secrets & Config](#-secrets--config)  
-- [Automation Pipeline Diagram](#automation-pipeline-diagram)  
-- [Repository Structure](#repository-structure)  
+- 📝 [Overview](#overview)  
+- 🔧 [Tech Stack](#-tech-stack)  
+- 🌟 [Key Features](#-key-features)  
+- ⚙️ [CI/CD Pipeline](#cicd-pipeline-gitlab)  
+- 🔒 [Secrets & Config](#-secrets--config)  
+- 📊 [Automation Pipeline Diagram](#automation-pipeline-diagram)  
+- 🗂️ [Repository Structure](#repository-structure)  
 
 ---
 
