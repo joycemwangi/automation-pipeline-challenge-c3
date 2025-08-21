@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/joycemwangi/automation-pipeline-challenge-c3/actions/workflows/lint.yml">
-    <img src="https://github.com/joycemwangi/automation-pipeline-ch3/actions/workflows/lint.yml/badge.svg?branch=main" alt="Lint status (GitHub Actions)">
+    <img src="https://github.com/joycemwangi/automation-pipeline-challenge-c3/actions/workflows/lint.yml/badge.svg" alt="Lint status (GitHub Actions)">
   </a>
   &nbsp;
   <a href="https://codesandbox.io/p/github/joycemwangi/automation-pipeline-challenge-c3/main" target="_blank">
