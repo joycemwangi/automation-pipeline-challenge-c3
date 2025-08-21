@@ -1,7 +1,7 @@
 # **Automation Pipeline Challenge C3**
 
 <p align="center">
-  <a href="https://github.com/joycemwangi/automation-pipeline-challenge-c3/actions/workflows/lint.yml">
+  <a href="="https://github.com/joycemwangi/automation-pipeline-challenge-c3/actions/workflows/lint.yml">
     <img src="https://github.com/joycemwangi/automation-pipeline-challenge-c3/actions/workflows/lint.yml/badge.svg" alt="Lint status (GitHub Actions)">
   </a>
   &nbsp;
@@ -61,7 +61,9 @@
 
 ## **Overview**
 This repository contains the solution for the **Automation Pipeline Challenge C3**, which involves designing and implementing an infrastructure solution for a scalable, secure, and observable client-facing media search and download API service.  
-It reflects a transition toward a modern, containerized environment with automation, reliability, and operational excellence as priorities.
+It reflects a transition toward a modern, containerized environment with automation, reliability, and operational excellence as priorities.  
+
+[🔝 Back to Quick Links](#-quick-links)
 
 ---
 
@@ -73,6 +75,8 @@ It reflects a transition toward a modern, containerized environment with automat
 - Web & API Services: Nginx (HTTPS, SSL certs), Node.js demo API  
 - Version Control & Collaboration: GitHub, GitLab, Git  
 
+[🔝 Back to Quick Links](#-quick-links)
+
 ---
 
 ## 🌟 Key Features
@@ -83,45 +87,28 @@ It reflects a transition toward a modern, containerized environment with automat
 - Resilient Deployments – GitLab pipeline enables validation, smoke testing, gated promotions, and rollback.  
 - Operational Efficiency – Automated OS patching, reboot workflows, and repeatable deployments reduce manual effort.  
 
----
-
-## **Implementation Details**
-- **Infrastructure as Code**: Ansible playbooks and roles to provision and configure a load balancer, application servers, and monitoring agents.  
-  - [site.yml](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/ansible/playbooks/site.yml) – main deployment playbook  
-  - [maintenance.yml](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/ansible/playbooks/maintenance.yml) – OS patching and housekeeping tasks  
-  - [certs_create.yml](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/ansible/playbooks/certs_create.yml) – SSL certificate generation and renewal  
-- **Role-Based Configuration Management**: Modular roles for [NGINX](https://github.com/joycemwangi/automation-pipeline-challenge-c3/tree/main/ansible/roles/nginx), [Zabbix Agent](https://github.com/joycemwangi/automation-pipeline-challenge-c3/tree/main/ansible/roles/zabbix_agent), and [Maintenance](https://github.com/joycemwangi/automation-pipeline-challenge-c3/tree/main/ansible/roles/maintenance).  
-- **Security & HTTPS Support**: Automated SSL certificate creation and integration with Nginx for secure API access.  
-- **Observability**: Zabbix Agent deployment and configuration for real-time monitoring and system health tracking.  
-- **Automated Maintenance**: Playbooks to apply the latest OS patches and reboot servers automatically.  
-- **CI/CD Integration**: GitLab pipeline with validation, Kubernetes deployment, smoke testing, promotion between environments, and rollback.  
-- **Multi-Environment Support**: Flexible inventory and variable structure for dev, staging, and production without code changes.  
+[🔝 Back to Quick Links](#-quick-links)
 
 ---
 
-## **Extended Description**
-This project demonstrates an end-to-end automation workflow for deploying and managing Linux-based infrastructure and application services.  
+## ⚙️ CI/CD Pipeline (GitLab)
 
-The solution emphasizes:  
-- Automation – Ansible playbooks and roles provide consistent provisioning, configuration, and maintenance.  
-- Security & Reliability – HTTPS setup, SSL certificates, and hardened system configurations.  
-- Observability – Integration of Zabbix Agent for real-time health and performance tracking.  
-- Scalability – Kubernetes + Helm enable repeatable deployments across dev, staging, and production.  
-- CI/CD Excellence – GitLab pipeline automates validation, builds, deployments, smoke tests, promotions, and rollbacks.  
+This project uses **GitLab CI/CD** to automate validation, deployment, and operational checks across environments.  
 
-This design reflects a shift toward modern, containerized infrastructure with automation, observability, and operational resilience as core principles.  
+### Pipeline Stages
+1. **Validate** – Linting, YAML syntax checks, and static code analysis.  
+2. **Build** – Container image builds for the demo API service.  
+3. **Deploy** – Helm-based deployments to Kubernetes clusters.  
+4. **Smoke Test** – Automated health checks against the deployed service.  
+5. **Promote** – Controlled rollout to staging or production environments.  
+6. **Rollback** –  
+   - **Helm Rollback** – Restore a previous stable release with `helm rollback`.  
+   - **Image Pinning** – Redeploy last-known-good container image tags for recovery.  
 
----
+This pipeline covers automated validation, gated Kubernetes deployments, and rapid rollback, aligned to modern containerized infrastructure practices.  
+The complete pipeline definition is available in [`.gitlab-ci.yml`](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/.gitlab-ci.yml).  
 
-## Automation Pipeline Diagram
-
-<p align="center">
-  <a href="https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/docs/automation-pipeline.png" target="_blank">
-    <img src="docs/automation-pipeline.png" alt="Automation Pipeline Diagram" width="500">
-  </a>
-</p>
-
-📎 [View full-size diagram](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/docs/automation-pipeline.png)
+[🔝 Back to Quick Links](#-quick-links)
 
 ---
 
@@ -136,8 +123,25 @@ This design reflects a shift toward modern, containerized infrastructure with au
 - **No Hardcoding** – No passwords, tokens, or keys are stored in playbooks or version control.  
 - **Best Practices** – HTTPS, SSL certificate automation, and RBAC enforce secure deployment pipelines.  
 
+[🔝 Back to Quick Links](#-quick-links)
+
 ---
-## Repository Structure
+
+## 📊 Automation Pipeline Diagram
+
+<p align="center">
+  <a href="https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/docs/automation-pipeline.png" target="_blank">
+    <img src="docs/automation-pipeline.png" alt="Automation Pipeline Diagram" width="500">
+  </a>
+</p>
+
+📎 [View full-size diagram](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/docs/automation-pipeline.png)
+
+[🔝 Back to Quick Links](#-quick-links)
+
+---
+
+## 🗂️ Repository Structure
 ```text
 automation-pipeline-challenge-c3/
 ├── ansible/
