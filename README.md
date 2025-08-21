@@ -54,6 +54,17 @@
 
 ---
 
+## 🔗 Quick Links
+- [Overview](#overview)  
+- [Tech Stack](#-tech-stack)  
+- [Key Features](#-key-features)  
+- [CI/CD Pipeline](#cicd-pipeline-gitlab)  
+- [Secrets & Config](#-secrets--config)  
+- [Automation Pipeline Diagram](#automation-pipeline-diagram)  
+- [Repository Structure](#repository-structure)  
+
+---
+
 ## **Overview**
 This repository contains the solution for the **Automation Pipeline Challenge C3**, which involves designing and implementing an infrastructure solution for a scalable, secure, and observable client-facing media search and download API service.  
 It reflects a transition toward a modern, containerized environment with automation, reliability, and operational excellence as priorities.
