@@ -45,36 +45,53 @@
 ---
 
 ## **Overview**
-This repository contains the solution for the **Automation Pipeline Challenge C3**, which involves designing and partially implementing an infrastructure solution for a scalable, secure, and observable client-facing media search and download API service.
-The API queries Elasticsearch for metadata, retrieves media files from storage, and serves them over HTTPS.
-The core services run on Linux, and the solution reflects a transition toward a modern, containerized environment with automation, reliability, and operational excellence as priorities.
+This repository contains the solution for the **Automation Pipeline Challenge C3**, which involves designing and implementing an infrastructure solution for a scalable, secure, and observable client-facing media search and download API service.  
+It reflects a transition toward a modern, containerized environment with automation, reliability, and operational excellence as priorities.
 
-The deployment target includes:
-- **Load balancer:** 192.168.10.2
-- **Server A:** 192.168.10.3
-- **Server B:** 192.168.10.4
-- **Zabbix Agent Server:** 192.168.10.5
+---
 
-The challenge tasks included:
-1. Provisioning and configuring infrastructure using **Ansible**.
-2. Setting up **Nginx** with HTTPS and SSL certificates.
-3. Installing and configuring the **Zabbix monitoring agent** for observability.
-4. Automating maintenance tasks such as OS patching and reboot.
-5. Outlining a **GitLab CI/CD pipeline** for automated testing, build, deployment, and rollback of API updates.
+## 🔧 Tech Stack
+- **Infrastructure as Code & Automation**: Ansible, Python, Bash  
+- **Containerization & Orchestration**: Kubernetes, Helm, Docker  
+- **Monitoring & Observability**: Zabbix Agent (system health and alerting)  
+- **CI/CD Pipeline**: GitLab CI/CD for validation, build, deploy, smoke testing, and rollback  
+- **Web & API Services**: Nginx (HTTPS, SSL certs), Node.js demo API  
+- **Version Control & Collaboration**: GitHub, GitLab, Git  
+
+---
+
+## 🌟 Key Features
+- **End-to-End Automation** – Infrastructure provisioning, configuration management, and CI/CD pipeline in one workflow.  
+- **Secure by Design** – Automated HTTPS, SSL certificate handling, and hardened configurations.  
+- **Proactive Monitoring** – Integrated Zabbix Agent for real-time health checks and alerting.  
+- **Kubernetes-Ready** – Helm charts and Kubernetes deployments for scalability across environments.  
+- **Resilient Deployments** – GitLab pipeline enables validation, smoke testing, gated promotions, and rollback.  
+- **Operational Efficiency** – Automated OS patching, reboot workflows, and repeatable deployments reduce manual effort.  
+
+---
+
+## **Implementation Details**
+- **Infrastructure as Code**: Ansible playbooks and roles to provision and configure a load balancer, application servers, and monitoring agents.  
+- **Role-Based Configuration Management**: Modular roles for Nginx, Zabbix Agent, and maintenance tasks enable reusability and easier maintenance.  
+- **Security & HTTPS Support**: Automated SSL certificate creation and integration with Nginx for secure API access.  
+- **Observability**: Zabbix Agent deployment and configuration for real-time monitoring and system health tracking.  
+- **Automated Maintenance**: Playbooks to apply the latest OS patches and reboot servers automatically.  
+- **CI/CD Integration**: GitLab pipeline with validation, Kubernetes deployment, smoke testing, promotion between environments, and rollback.  
+- **Multi-Environment Support**: Flexible inventory and variable structure for dev, staging, and production without code changes.  
 
 ---
 
 ## **Extended Description**
-This project demonstrates an end-to-end automation workflow for deploying and managing Linux-based infrastructure and application services.
-The automation is designed to be modular, reusable, and environment-agnostic, supporting multiple deployment targets with minimal code changes.
+This project demonstrates an end-to-end automation workflow for deploying and managing Linux-based infrastructure and application services.  
 
-Key highlights:
-- **Infrastructure as Code**: Ansible playbooks and roles to provision a load balancer and two application servers.
-- **Configuration Management**: Role-based management of Nginx, Zabbix Agent, and maintenance operations.
-- **Security & Observability**: HTTPS configuration, SSL certificate handling, and integration with Zabbix monitoring.
-- **Maintenance Automation**: Automated OS patching and reboot workflows for keeping servers secure and up to date.
-- **CI/CD Integration**: GitLab pipeline for validation, Kubernetes-based deployment, smoke testing, promotion, and rollback.
-- **Environment Flexibility**: Inventory and variable structure to easily adapt the same automation to dev, staging, and prod.
+The solution emphasizes:  
+- **Automation** – Ansible playbooks and roles provide consistent provisioning, configuration, and maintenance.  
+- **Security & Reliability** – HTTPS setup, SSL certificates, and hardened system configurations.  
+- **Observability** – Integration of Zabbix Agent for real-time health and performance tracking.  
+- **Scalability** – Kubernetes + Helm enable repeatable deployments across dev, staging, and production.  
+- **CI/CD Excellence** – GitLab pipeline automates validation, builds, deployments, smoke tests, promotions, and rollbacks.  
+
+This design reflects a shift toward **modern, containerized infrastructure** with automation, observability, and operational resilience as core principles.  
 
 ---
 
@@ -87,18 +104,6 @@ Key highlights:
 </p>
 
 ---
-
-## **Features**
-- **Infrastructure as Code**: Ansible playbooks and roles to provision and configure a load balancer, application servers, and monitoring agents.
-- **Role-Based Configuration Management**: Modular roles for Nginx, Zabbix Agent, and maintenance tasks enable reusability and easier maintenance.
-- **Security & HTTPS Support**: Automated SSL certificate creation and integration with Nginx for secure API access.
-- **Observability**: Zabbix Agent deployment and configuration for real-time monitoring and system health tracking.
-- **Automated Maintenance**: Playbooks to apply the latest OS patches and reboot servers automatically.
-- **CI/CD Integration**: GitLab pipeline with validation, Kubernetes deployment, smoke testing, promotion between environments, and rollback.
-- **Multi-Environment Support**: Flexible inventory and variable structure for dev, staging, and production without code changes.
-
----
-
 ## Repository Structure
 ```text
 automation-pipeline-challenge-c3/
