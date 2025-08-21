@@ -71,13 +71,16 @@ It reflects a transition toward a modern, containerized environment with automat
 ---
 
 ## **Implementation Details**
-- Infrastructure as Code: Ansible playbooks and roles to provision and configure a load balancer, application servers, and monitoring agents.  
-- Role-Based Configuration Management: Modular roles for Nginx, Zabbix Agent, and maintenance tasks enable reusability and easier maintenance.  
-- Security & HTTPS Support: Automated SSL certificate creation and integration with Nginx for secure API access.  
-- Observability: Zabbix Agent deployment and configuration for real-time monitoring and system health tracking.  
-- Automated Maintenance: Playbooks to apply the latest OS patches and reboot servers automatically.  
-- CI/CD Integration: GitLab pipeline with validation, Kubernetes deployment, smoke testing, promotion between environments, and rollback.  
-- Multi-Environment Support: Flexible inventory and variable structure for dev, staging, and production without code changes.  
+- **Infrastructure as Code**: Ansible playbooks and roles to provision and configure a load balancer, application servers, and monitoring agents.  
+  - [site.yml](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/ansible/playbooks/site.yml) – main deployment playbook  
+  - [maintenance.yml](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/ansible/playbooks/maintenance.yml) – OS patching and housekeeping tasks  
+  - [certs_create.yml](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/ansible/playbooks/certs_create.yml) – SSL certificate generation and renewal  
+- **Role-Based Configuration Management**: Modular roles for [NGINX](https://github.com/joycemwangi/automation-pipeline-challenge-c3/tree/main/ansible/roles/nginx), [Zabbix Agent](https://github.com/joycemwangi/automation-pipeline-challenge-c3/tree/main/ansible/roles/zabbix_agent), and [Maintenance](https://github.com/joycemwangi/automation-pipeline-challenge-c3/tree/main/ansible/roles/maintenance).  
+- **Security & HTTPS Support**: Automated SSL certificate creation and integration with Nginx for secure API access.  
+- **Observability**: Zabbix Agent deployment and configuration for real-time monitoring and system health tracking.  
+- **Automated Maintenance**: Playbooks to apply the latest OS patches and reboot servers automatically.  
+- **CI/CD Integration**: GitLab pipeline with validation, Kubernetes deployment, smoke testing, promotion between environments, and rollback.  
+- **Multi-Environment Support**: Flexible inventory and variable structure for dev, staging, and production without code changes.  
 
 ---
 
