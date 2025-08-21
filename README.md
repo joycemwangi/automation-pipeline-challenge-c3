@@ -249,39 +249,22 @@ zabbix_agentd.conf
 
 `ansible/temp/` is intentionally in `.gitignore` so generated files don’t get committed.
 
-## **CI/CD Pipeline (GitLab)**
+## CI/CD Pipeline (GitLab)
 
-Automates testing, build, deployment, and rollback for the API on Kubernetes.
-The complete pipeline definition is available in [`.gitlab-ci.yml`](./.gitlab-ci.yml).
+This project uses **GitLab CI/CD** to automate validation, deployment, and operational checks across environments.  
 
-**Goals**
-- Enforce quality through YAML linting, Ansible lint, and syntax checking.
-- Build API container and push to GitLab Container Registry.
-- Deploy to Kubernetes (Dev → Staging → Prod) using Helm or `kubectl`.
-- Run smoke tests after each deployment.
-- Enable one-click rollback via Helm.
+### Pipeline Stages
+1. **Validate** – Linting, YAML syntax checks, and static code analysis.  
+2. **Build** – Container image builds for the demo API service.  
+3. **Deploy** – Helm-based deployments to Kubernetes clusters.  
+4. **Smoke Test** – Automated health checks against the deployed service.  
+5. **Promote** – Controlled rollout to staging or production environments.  
+6. **Rollback** –  
+   - **Helm Rollback** – Restore a previous stable release with `helm rollback`.  
+   - **Image Pinning** – Redeploy last-known-good container image tags for recovery.  
 
-**Stages**
-- **validate** – Run `yamllint`, `ansible-lint`, Ansible syntax check, and render templates locally.
-- **build** – Build and push API image (tags: `latest` + commit SHA).
-- **deploy** – Helm upgrade/install to target namespace with new image tag.
-- **smoke** – Test `/healthz` endpoint in Kubernetes service.
-- **promote** – Manual approvals for staging → prod promotion.
-- **rollback** – Manual Helm rollback to previous release.
-
-## 🔒 Secrets & Config
-
-- **Secrets Management** – All sensitive values are stored as **masked GitLab CI/CD variables** (`KUBE_CONFIG`, `HELM_REPO_AUTH`, `ANSIBLE_VAULT_PASSWORD`).  
-- **Kubernetes Secrets & GitLab Vault** – Used for sensitive runtime values such as certificates, credentials, and API tokens.  
-- **Environment-Specific Configs** – Separate Helm values files (`values-dev.yaml`, `values-staging.yaml`, `values-prod.yaml`) to isolate dev, staging, and production environments.  
-- **No Hardcoding** – No passwords, tokens, or keys are stored in playbooks or version control.  
-- **Best Practices** – Combined HTTPS, SSL certificate automation, and RBAC to ensure secure deployment pipelines.  
-
-**Rollback Strategy**
-- **Helm**: `helm rollback` to a previous release.
-- **Image pinning**: Redeploy last-known-good image tag.
-
-This pipeline covers automated validation, Kubernetes deployments with gated promotions, and rapid rollback, aligned to a modern containerized infrastructure.
+This pipeline covers automated validation, gated Kubernetes deployments, and rapid rollback, aligned to modern containerized infrastructure practices.  
+The complete pipeline definition is available in [`.gitlab-ci.yml`](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/.gitlab-ci.yml).  
 
 ## **Executable Demo**
 
