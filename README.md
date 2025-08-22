@@ -127,6 +127,8 @@ The complete pipeline definition is available in [`.gitlab-ci.yml`](https://gith
 
 ---
 
+---
+
 ## 📊 Automation Pipeline Diagram
 
 <p align="center">
@@ -140,6 +142,7 @@ The complete pipeline definition is available in [`.gitlab-ci.yml`](https://gith
 [🔝 Back to Quick Links](#-quick-links)
 
 ---
+
 ## 🗂️ Repository Structure
 
 ```text
@@ -172,9 +175,8 @@ automation-pipeline-challenge-c3/
 └── docs/
     ├── automation-pipeline.png
     └── submission.pdf
-```
-🔝 Back to Quick Links
 
+🔝 Back to Quick Links
 
 ## **How the Roles Work**
 
