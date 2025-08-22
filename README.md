@@ -105,9 +105,13 @@ This project uses **GitLab CI/CD** to automate validation, deployment, and opera
 3. **Deploy** – Helm-based deployments to Kubernetes clusters.  
 4. **Smoke Test** – Automated health checks against the deployed service.  
 5. **Promote** – Controlled rollout to staging or production environments.  
-6. **Rollback** –  
+6. **Rollback & Progressive Delivery** –  
    - **Helm Rollback** – Restore a previous stable release with `helm rollback`.  
    - **Image Pinning** – Redeploy last-known-good container image tags for recovery.  
+   - **Blue-Green Deployments** – Maintain two environments (Blue = stable, Green = new). Switch traffic to Green after validation; fall back to Blue if issues arise.  
+   - **Canary Releases** – Gradually shift traffic (5% → 25% → 100%) to the new version. Automatically rollback if error rate, latency, or saturation metrics exceed thresholds.  
+   - **Feature Flags** – Decouple deployment from release using toggles to enable/disable features at runtime without redeploying.  
+   - **Monitoring-Driven Automation** – Integrated with Prometheus/Zabbix to track RED/USE metrics. Rollbacks and promotions are triggered by live health checks.  
 
 This pipeline covers automated validation, gated Kubernetes deployments, and rapid rollback, aligned to modern containerized infrastructure practices.  
 The complete pipeline definition is available in [`.gitlab-ci.yml`](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/.gitlab-ci.yml).  
@@ -281,29 +285,6 @@ zabbix_agentd.conf
 - `ansible/temp/` — output workspace (ignored by Git except for `.gitkeep`)
 
 `ansible/temp/` is intentionally in `.gitignore` so generated files don’t get committed.
-
-## CI/CD Pipeline (GitLab)
-
-This project uses **GitLab CI/CD** to automate validation, deployment, and operational checks across environments.  
-
-### Pipeline Stages
-1. **Validate** – Linting, YAML syntax checks, and static code analysis.  
-2. **Build** – Container image builds for the demo API service.  
-3. **Deploy** – Helm-based deployments to Kubernetes clusters.  
-4. **Smoke Test** – Automated health checks against the deployed service.  
-5. **Promote** – Controlled rollout to staging or production environments.  
-6. Rollback & Progressive Delivery –
-   - **Helm Rollback** – Restore a previous stable release with `helm rollback`.  
-   - **Image Pinning** – Redeploy last-known-good container image tags for recovery.  
-   - **Blue-Green Deployments** – Maintain two environments (Blue = stable, Green = new). Switch traffic to Green after validation; fall back to Blue if issues arise.  
-   - **Canary Releases** – Gradually shift traffic (5% → 25% → 100%) to the new version. Automatically rollback if error rate, latency, or saturation metrics exceed thresholds.  
-   - **Feature Flags** – Decouple deployment from release using toggles to enable/disable features at runtime without redeploying.  
-   - **Monitoring-Driven Automation** – Integrated with Prometheus/Zabbix to track RED/USE metrics. Rollbacks and promotions are triggered by live health checks.  
-
-This pipeline covers automated validation, gated Kubernetes deployments, and rapid rollback, aligned to modern containerized infrastructure practices.  
-The complete pipeline definition is available in [`.gitlab-ci.yml`](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/.gitlab-ci.yml).  
-
-[🔝 Back to Quick Links](#-quick-links)
 
 ## **Executable Demo**
 
