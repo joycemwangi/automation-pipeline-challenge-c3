@@ -140,53 +140,41 @@ The complete pipeline definition is available in [`.gitlab-ci.yml`](https://gith
 [🔝 Back to Quick Links](#-quick-links)
 
 ---
-
 ## 🗂️ Repository Structure
+
 ```text
 automation-pipeline-challenge-c3/
 ├── ansible/
-│ ├── inventories/
-│ │ └── hosts.ini
-│ ├── group_vars/
-│ │ └── all.yml
-│ ├── roles/
-│ │ ├── nginx
-/
-│ │ ├── zabbix_agent
-/
-│ │ └── maintenance
-/
-│ ├── playbooks/
-│ │ ├── site.yml
-
-│ │ ├── maintenance.yml
-
-│ │ └── certs_create.yml
-
-│ └── ansible.cfg
+│   ├── inventories/
+│   │   └── hosts.ini
+│   ├── group_vars/
+│   │   └── all.yml
+│   ├── roles/
+│   │   ├── nginx/
+│   │   ├── zabbix_agent/
+│   │   └── maintenance/
+│   ├── playbooks/
+│   │   ├── site.yml
+│   │   ├── maintenance.yml
+│   │   └── certs_create.yml
+│   └── ansible.cfg
 ├── demo-api/
-│ ├── Dockerfile
-│ ├── package.json
-│ ├── server.js
-│ └── helm/
-│ └── demo-media-api/
-│ ├── values-dev.yaml
-
-│ ├── values-staging.yaml
-
-│ └── values-prod.yaml
-
+│   ├── Dockerfile
+│   ├── package.json
+│   ├── server.js
+│   └── helm/
+│       └── demo-media-api/
+│           ├── values-dev.yaml
+│           ├── values-staging.yaml
+│           └── values-prod.yaml
 ├── .gitlab-ci.yml
-
 ├── README.md
 └── docs/
-├── automation-pipeline.png
-
-└── submission.pdf
+    ├── automation-pipeline.png
+    └── submission.pdf
 ```
-[🔝 Back to Quick Links](#-quick-links)
+🔝 Back to Quick Links
 
-```
 
 ## **How the Roles Work**
 
