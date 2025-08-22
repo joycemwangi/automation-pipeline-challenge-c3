@@ -292,6 +292,8 @@ This project uses **GitLab CI/CD** to automate validation, deployment, and opera
 This pipeline covers automated validation, gated Kubernetes deployments, and rapid rollback, aligned to modern containerized infrastructure practices.  
 The complete pipeline definition is available in [`.gitlab-ci.yml`](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/.gitlab-ci.yml).  
 
+[🔝 Back to Quick Links](#-quick-links)
+
 ## **Executable Demo**
 
 <p align="center">
