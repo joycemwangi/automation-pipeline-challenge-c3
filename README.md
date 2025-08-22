@@ -59,6 +59,7 @@
 
 ---
 
+<a id="overview"></a>
 ## **Overview**
 This repository contains the solution for the **Automation Pipeline Challenge C3**, which involves designing and implementing an infrastructure solution for a scalable, secure, and observable client-facing media search and download API service.  
 It reflects a transition toward a modern, containerized environment with automation, reliability, and operational excellence as priorities.  
@@ -67,6 +68,7 @@ It reflects a transition toward a modern, containerized environment with automat
 
 ---
 
+<a id="tech-stack"></a>
 ## 🔧 Tech Stack
 - Infrastructure as Code & Automation: Ansible, Python, Bash  
 - Containerization & Orchestration: Kubernetes, Helm, Docker  
@@ -79,6 +81,7 @@ It reflects a transition toward a modern, containerized environment with automat
 
 ---
 
+<a id="key-features"></a>
 ## 🌟 Key Features
 - End-to-End Automation – Infrastructure provisioning, configuration management, and CI/CD pipeline in one workflow.  
 - Secure by Design – Automated HTTPS, SSL certificate handling, and hardened configurations.  
@@ -91,6 +94,7 @@ It reflects a transition toward a modern, containerized environment with automat
 
 ---
 
+<a id="cicd-pipeline-gitlab"></a>
 ## ⚙️ CI/CD Pipeline (GitLab)
 
 This project uses **GitLab CI/CD** to automate validation, deployment, and operational checks across environments.  
@@ -112,6 +116,7 @@ The complete pipeline definition is available in [`.gitlab-ci.yml`](https://gith
 
 ---
 
+<a id="secrets-config"></a>
 ## 🔒 Secrets & Config
 - **Secrets Management** – All sensitive values are stored as masked GitLab CI/CD variables:  
   `KUBE_CONFIG`, `HELM_REPO_AUTH`, `ANSIBLE_VAULT_PASSWORD`  
@@ -129,6 +134,7 @@ The complete pipeline definition is available in [`.gitlab-ci.yml`](https://gith
 
 ---
 
+<a id="automation-pipeline-diagram"></a>
 ## 📊 Automation Pipeline Diagram
 
 <p align="center">
@@ -143,6 +149,7 @@ The complete pipeline definition is available in [`.gitlab-ci.yml`](https://gith
 
 ---
 
+<a id="repository-structure"></a>
 ## 🗂️ Repository Structure
 
 ```text
