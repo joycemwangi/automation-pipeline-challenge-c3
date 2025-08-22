@@ -50,12 +50,12 @@
 
 ## 🔗 Quick Links
 - 📝 [Overview](#overview)  
-- 🔧 [Tech Stack](#-tech-stack)  
-- 🌟 [Key Features](#-key-features)  
+- 🔧 [Tech Stack](#tech-stack)  
+- 🌟 [Key Features](#key-features)  
 - ⚙️ [CI/CD Pipeline](#cicd-pipeline-gitlab)  
-- 🔒 [Secrets & Config](#-secrets--config)  
-- 📊 [Automation Pipeline Diagram](#-automation-pipeline-diagram)  
-- 🗂️ [Repository Structure](#-repository-structure)  
+- 🔒 [Secrets & Config](#secrets--config)  
+- 📊 [Automation Pipeline Diagram](#automation-pipeline-diagram)  
+- 🗂️ [Repository Structure](#repository-structure)  
 
 ---
 
