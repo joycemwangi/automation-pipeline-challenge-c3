@@ -54,8 +54,8 @@
 - 🌟 [Key Features](#-key-features)  
 - ⚙️ [CI/CD Pipeline](#cicd-pipeline-gitlab)  
 - 🔒 [Secrets & Config](#-secrets--config)  
-- 📊 [Automation Pipeline Diagram](#automation-pipeline-diagram)  
-- 🗂️ [Repository Structure](#repository-structure)  
+- 📊 [Automation Pipeline Diagram](#-automation-pipeline-diagram)  
+- 🗂️ [Repository Structure](#-repository-structure)  
 
 ---
 
