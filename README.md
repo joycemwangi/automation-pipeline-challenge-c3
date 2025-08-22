@@ -175,7 +175,7 @@ automation-pipeline-challenge-c3/
 └── docs/
     ├── automation-pipeline.png
     └── submission.pdf
-\`\`\`**
+```
 
 🔝 Back to Quick Links
 
