@@ -177,7 +177,7 @@ automation-pipeline-challenge-c3/
     └── submission.pdf
 ```
 
-🔝 Back to Quick Links
+[🔝 Back to Quick Links](#-quick-links)
 
 ## **How the Roles Work**
 
