@@ -53,11 +53,10 @@ build:docker-image:
 
 # ------------------------------------------------------------
 # --------------------  S E C R E T S  -----------------------
-# Gated by toggles so your pipeline won't break. Set in
-# Settings → CI/CD → Variables to enable:
+# Set in Settings → CI/CD → Variables to enable:
 #  - USE_VAULT=true  (needs VAULT_ADDR, VAULT_ROLE, optional VAULT_NAMESPACE)
 #  - USE_AWS_SM=true (needs AWS_REGION, AWS_ROLE_ARN)
-#  - USE_ESO=true    (needs KUBE_CONFIG base64)
+#  - USE_ESO=true    (needs KUBE_CONFIG base64, plus ESO_BACKEND=aws|vault)
 # ------------------------------------------------------------
 
 # HashiCorp Vault (OIDC/JWT) → dotenv
@@ -123,8 +122,21 @@ apply_eso_manifests:
   script:
     - mkdir -p ~/.kube
     - echo "$KUBE_CONFIG" | base64 -d > ~/.kube/config
-    - kubectl apply -f k8s/eso/secret-store-aws.yaml
-    - kubectl apply -f k8s/eso/external-secret-aws.yaml
+    - |
+      case "$ESO_BACKEND" in
+        aws)
+          kubectl apply -f k8s/eso/secret-store-aws.yaml
+          kubectl apply -f k8s/eso/external-secret-aws.yaml
+          ;;
+        vault)
+          kubectl apply -f k8s/eso/secret-store-vault.yaml
+          kubectl apply -f k8s/eso/external-secret-vault.yaml
+          ;;
+        *)
+          echo "Set ESO_BACKEND=aws or ESO_BACKEND=vault" >&2
+          exit 1
+          ;;
+      esac
 
 # ------------------------------------------------------------
 # --------------------   D E P L O Y   -----------------------
