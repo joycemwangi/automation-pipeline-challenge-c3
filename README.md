@@ -37,12 +37,6 @@
   📎 <a href="https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/docs/submission.pdf" target="_blank">View Full Submission Document (PDF)</a>
 </p>
 
-
-  
-<p align="center">
-  📎 <a href="https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/docs/submission.pdf" target="_blank">View Full Submission Document (PDF)</a>
-</p>
-
 ---
 
 ## 🔗 Quick Links
