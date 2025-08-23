@@ -1,47 +1,44 @@
 # **Automation Pipeline Challenge C3**
 
+<!-- Badges (centered) -->
+<p align="center">
   <a href="https://github.com/joycemwangi/automation-pipeline-challenge-c3/actions/workflows/lint.yml">
-  <img src="https://github.com/joycemwangi/automation-pipeline-challenge-c3/actions/workflows/lint.yml/badge.svg?branch=main" alt="Lint status (GitHub Actions)">
-</a>
-&nbsp;
-  
+    <img src="https://github.com/joycemwangi/automation-pipeline-challenge-c3/actions/workflows/lint.yml/badge.svg?branch=main" alt="Lint status (GitHub Actions)">
+  </a>
+  &nbsp;
   <a href="https://codesandbox.io/p/github/joycemwangi/automation-pipeline-challenge-c3/main" target="_blank">
-    <img src="https://img.shields.io/badge/Open%20in-CodeSandbox-blue?logo=codesandbox" alt="Open project in CodeSandbox">
+    <img src="https://img.shields.io/badge/Open%20in-CodeSandbox-blue?logo=codesandbox" alt="Open in CodeSandbox">
   </a>
   &nbsp;
   <a href="https://kncqz4-8080.csb.app/healthz" target="_blank">
-    <img src="https://img.shields.io/badge/Live%20Demo-OK-green" alt="Live Demo Health Check">
+    <img src="https://img.shields.io/badge/Live%20Demo-OK-green" alt="Live Demo (/healthz)">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://www.ansible.com/">
-    <img src="https://img.shields.io/badge/Ansible-2.14+-blue" alt="Ansible version 2.14 or higher">
-  </a>
+  <a href="https://www.ansible.com/"><img src="https://img.shields.io/badge/Ansible-2.14+-blue" alt="Ansible"></a>
   &nbsp;
-  <a href="https://www.python.org/">
-    <img src="https://img.shields.io/badge/Python-3.11+-blue" alt="Python version 3.11 or higher">
-  </a>
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.11+-blue" alt="Python"></a>
   &nbsp;
-  <a href="https://kubernetes.io/">
-    <img src="https://img.shields.io/badge/Kubernetes-1.27+-informational?logo=kubernetes" alt="Kubernetes version 1.27 or higher">
-  </a>
+  <a href="https://kubernetes.io/"><img src="https://img.shields.io/badge/Kubernetes-1.27+-informational?logo=kubernetes" alt="Kubernetes"></a>
   &nbsp;
-  <a href="https://helm.sh/">
-    <img src="https://img.shields.io/badge/Helm-3.12+-informational?logo=helm" alt="Helm version 3.12 or higher">
-  </a>
+  <a href="https://helm.sh/"><img src="https://img.shields.io/badge/Helm-3.12+-informational?logo=helm" alt="Helm"></a>
   &nbsp;
-  <a href="https://about.gitlab.com/stages-devops-lifecycle/continuous-integration/">
-    <img src="https://img.shields.io/badge/GitLab-CI/CD-orange" alt="GitLab Continuous Integration and Deployment">
-  </a>
+  <a href="https://about.gitlab.com/stages-devops-lifecycle/continuous-integration/"><img src="https://img.shields.io/badge/GitLab-CI/CD-orange" alt="GitLab CI/CD"></a>
 </p>
 
 <p align="center">
   <a href="https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/docs/submission.pdf" target="_blank">
-    <img src="https://img.shields.io/badge/Submission-PDF-informational" alt="View project submission PDF">
+    <img src="https://img.shields.io/badge/Submission-PDF-informational" alt="Submission PDF">
   </a>
 </p>
 
+<p align="center">
+  📎 <a href="https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/docs/submission.pdf" target="_blank">View Full Submission Document (PDF)</a>
+</p>
+
+
+  
 <p align="center">
   📎 <a href="https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/docs/submission.pdf" target="_blank">View Full Submission Document (PDF)</a>
 </p>
