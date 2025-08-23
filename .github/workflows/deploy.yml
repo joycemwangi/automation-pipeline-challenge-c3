@@ -1,0 +1,124 @@
+name: Deploy
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write    # OIDC for AWS/Vault
+  packages: read
+
+env:
+  USE_ESO: ${{ vars.USE_ESO }}                 # "true" to apply ESO
+  ESO_BACKEND: ${{ vars.ESO_BACKEND }}         # "aws" or "vault"
+  IMAGE_REPO: ghcr.io/${{ github.repository_owner }}/automation-pipeline-challenge-c3-api
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  AWS_ROLE_ARN: ${{ vars.AWS_ROLE_ARN }}
+  VAULT_ADDR: ${{ vars.VAULT_ADDR }}
+  VAULT_ROLE: ${{ vars.VAULT_ROLE }}
+  SMOKE_URL: ${{ vars.SMOKE_URL }}             # e.g., https://your-app/healthz
+  NAMESPACE: demo
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # kubectl + helm
+      - uses: azure/setup-kubectl@v4
+        with: { version: v1.27.0 }
+      - uses: azure/setup-helm@v4
+        with: { version: v3.14.0 }
+
+      # kubeconfig from secret (base64)
+      - name: Write kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > ~/.kube/config
+
+      # --- ESO (optional) ---
+      - name: Apply External Secrets (AWS)
+        if: env.USE_ESO == 'true' && env.ESO_BACKEND == 'aws'
+        run: |
+          kubectl apply -f k8s/eso/secret-store-aws.yaml
+          kubectl apply -f k8s/eso/external-secret-aws.yaml
+
+      - name: Apply External Secrets (Vault)
+        if: env.USE_ESO == 'true' && env.ESO_BACKEND == 'vault'
+        run: |
+          kubectl apply -f k8s/eso/secret-store-vault.yaml
+          kubectl apply -f k8s/eso/external-secret-vault.yaml
+
+      # --- AWS Secrets Manager (runtime, OIDC) ---
+      - name: Configure AWS OIDC credentials
+        if: env.AWS_ROLE_ARN && env.AWS_REGION
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-session-name: gh-actions
+          mask-aws-account-id: true
+
+      - name: Pull secrets from AWS SM → env
+        if: env.AWS_ROLE_ARN && env.AWS_REGION
+        run: |
+          sudo apt-get update -y && sudo apt-get install -y jq awscli
+          aws secretsmanager get-secret-value \
+            --secret-id prod/demo-api \
+            --query SecretString --output text | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]' >> $GITHUB_ENV
+
+      # --- Vault (runtime, OIDC) ---
+      - name: Read secrets from Vault
+        if: env.VAULT_ADDR && env.VAULT_ROLE
+        uses: hashicorp/vault-action@v3
+        with:
+          url: ${{ env.VAULT_ADDR }}
+          method: jwt
+          role: ${{ env.VAULT_ROLE }}
+          exportEnv: true
+          # Add more lines here to export more keys if needed
+          secrets: |
+            kv/data/app/demo db_password | DB_PASSWORD
+
+      # --- (Optional) create GHCR imagePullSecret for private images ---
+      # Requires a fine-scoped PAT as secret GHCR_TOKEN (or make image public)
+      - name: Create imagePullSecret
+        if: ${{ secrets.GHCR_TOKEN != '' }}
+        run: |
+          kubectl create namespace "$NAMESPACE" --dry-run=client -o yaml | kubectl apply -f -
+          kubectl -n "$NAMESPACE" delete secret ghcr --ignore-not-found
+          kubectl -n "$NAMESPACE" create secret docker-registry ghcr \
+            --docker-server=ghcr.io \
+            --docker-username=${{ github.actor }} \
+            --docker-password='${{ secrets.GHCR_TOKEN }}'
+
+      # --- Helm deploy ---
+      - name: Helm upgrade/install demo-api
+        run: |
+          kubectl create namespace "$NAMESPACE" --dry-run=client -o yaml | kubectl apply -f -
+
+          HELM_ARGS=""
+          # pass secrets to Helm if they were exported above
+          if [ -n "${DB_USER}" ]; then HELM_ARGS="$HELM_ARGS --set-string db.user=${DB_USER}"; fi
+          if [ -n "${DB_PASSWORD}" ]; then HELM_ARGS="$HELM_ARGS --set-string db.pass=${DB_PASSWORD}"; fi
+
+          # add imagePullSecret if we created it
+          if kubectl -n "$NAMESPACE" get secret ghcr >/dev/null 2>&1; then
+            HELM_ARGS="$HELM_ARGS --set-string imagePullSecrets[0].name=ghcr"
+          fi
+
+          helm upgrade --install demo-api demo-api/helm/demo-media-api \
+            --namespace "$NAMESPACE" --create-namespace \
+            --set-string image.repository="${{ env.IMAGE_REPO }}" \
+            --set-string image.tag="${{ github.sha }}" \
+            --atomic --wait --timeout 5m \
+            $HELM_ARGS
+
+      # --- Smoke test (optional) ---
+      - name: Smoke test
+        if: env.SMOKE_URL != ''
+        run: |
+          curl -fsSL "$SMOKE_URL"
