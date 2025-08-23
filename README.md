@@ -124,7 +124,7 @@ The complete pipeline definition is available in [`.gitlab-ci.yml`](https://gith
 ## 🔒 Secrets & Config
 - **Secrets Management** – All sensitive values are stored as masked GitLab CI/CD variables:  
   `KUBE_CONFIG`, `HELM_REPO_AUTH`, `ANSIBLE_VAULT_PASSWORD`  
-- **Kubernetes Secrets & GitLab Vault** – Used for sensitive runtime values such as certificates, credentials, and API tokens.  
+- **Kubernetes Secrets (optionally sourced via External Secrets Operator from HashiCorp Vault or AWS Secrets Manager)** – Used for sensitive runtime values (certificates, credentials, API tokens); **encrypted at rest** (KMS) and protected by **RBAC**.
 - **Environment-Specific Configs** – Separate Helm values files for each environment:  
   - [values-dev.yaml](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/demo-api/helm/demo-media-api/values-dev.yaml)  
   - [values-staging.yaml](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/demo-api/helm/demo-media-api/values-staging.yaml)  
