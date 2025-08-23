@@ -53,10 +53,10 @@
 - 🔧 [Tech Stack](#tech-stack)  
 - 🌟 [Key Features](#key-features)  
 - ⚙️ [CI/CD Pipeline](#cicd-pipeline-gitlab)  
-- 🔒 [Secrets & Config](#secrets-config)  
+- 🔒 [Secrets & Config](#secrets-config)
+- 🔐 [Enterprise Secrets Lifecycle](#enterprise-secrets-lifecycle)
 - 📊 [Automation Pipeline Diagram](#automation-pipeline-diagram)  
 - 🗂️ [Repository Structure](#repository-structure)
-- 🔐 [Enterprise Secrets Lifecycle](#enterprise-secrets-lifecycle)
 
 ---
 
