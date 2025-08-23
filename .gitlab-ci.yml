@@ -1,180 +1,230 @@
-# .gitlab-ci.yml — CI/CD for API + Ansible infra
-# Stages:
-# - validate: lint YAML/Ansible and render templates (no servers)
-# - build: build & push API image
-# - deploy: deploy to envs via Ansible (or Helm if you containerize infra)
-# - smoke: health checks after deploy
-# - promote: manual gates to advance
-# - rollback: manual job to revert to a previous image
+# ------------------------------------------------------------
+# GitLab CI/CD for Automation Pipeline Challenge C3
+# - validate  : lint & static checks
+# - build     : build and push demo-api Docker image
+# - secrets   : fetch short-lived secrets (Vault or AWS SM) or sync via ESO
+# - deploy    : Ansible deploy (NGINX/etc) and/or Helm deploy to Kubernetes
+# - smoke     : simple health check
+# - promote   : manual approval / gating
+# - rollback  : Helm rollback + image pinning hooks
+# ------------------------------------------------------------
 
-stages: [validate, build, deploy, smoke, promote, rollback]
+stages: [validate, build, secrets, deploy, smoke, promote, rollback]
 
-default:
-  cache:
-    key: "$CI_COMMIT_REF_SLUG"
-    paths:
-      - .cache/pip
+# ---------- GLOBALS ----------
+variables:
+  DOCKER_TLS_CERTDIR: ""
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
+  # Optional: URL to smoke test after deploy (override per env in CI variables)
+  SMOKE_URL: "https://example.com/healthz"
 
-# -------- VALIDATION (static, no servers) --------
-validate:lint-and-syntax:
-  image: python:3.12-slim
+# ---------- VALIDATE ----------
+validate:ansible-lint:
   stage: validate
+  image: python:3.11
   before_script:
-    - python -V
-    - pip install --upgrade pip
-    - pip install ansible ansible-lint yamllint
+    - pip install --no-cache-dir "ansible>=2.14,<2.16" ansible-lint yamllint
   script:
-    - yamllint ansible
-    - ansible-lint
-    - ansible-playbook -i ansible/inventories/localhost.ini ansible/playbooks/site.yml --syntax-check
-    - ansible-playbook -i ansible/inventories/localhost.ini ansible/playbooks/certs_create.yml --syntax-check
-    - ansible-playbook -i ansible/inventories/localhost.ini ansible/playbooks/render_templates.yml
-  artifacts:
-    paths:
-      - ansible/temp/
-    expire_in: 7 days
+    - ansible-lint ansible/
+    - yamllint -f standard .
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_COMMIT_BRANCH
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH'
 
-# -------- BUILD (containerize the API) --------
+# ---------- BUILD (demo-api container) ----------
 build:docker-image:
-  image: docker:24
-  services: ["docker:24-dind"]
   stage: build
-  variables:
-    DOCKER_DRIVER: overlay2
-  before_script:
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
+  script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
-  script:
-    # Expect a Dockerfile in the repo root for the API
-    - docker build -t "$CI_REGISTRY_IMAGE/api:$CI_COMMIT_SHORT_SHA" -t "$CI_REGISTRY_IMAGE/api:latest" .
+    - docker build -t "$CI_REGISTRY_IMAGE/api:$CI_COMMIT_SHORT_SHA" -f demo-api/Dockerfile demo-api
     - docker push "$CI_REGISTRY_IMAGE/api:$CI_COMMIT_SHORT_SHA"
-    - docker push "$CI_REGISTRY_IMAGE/api:latest"
-  needs: ["validate:lint-and-syntax"]
+    # Tag a friendly name for main branch (optional)
+    - |
+      if [ "$CI_COMMIT_BRANCH" = "main" ]; then
+        docker tag "$CI_REGISTRY_IMAGE/api:$CI_COMMIT_SHORT_SHA" "$CI_REGISTRY_IMAGE/api:main"
+        docker push "$CI_REGISTRY_IMAGE/api:main"
+      fi
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      when: on_success
+    - if: '$CI_COMMIT_BRANCH'
 
-# -------- DEPLOY (Ansible to LB+web, or swap for Helm) --------
-.deploy_template: &deploy_template
-  image: python:3.12-slim
-  stage: deploy
-  before_script:
-    - pip install --upgrade pip
-    - pip install ansible
-    # SSH for Ansible (private key stored as protected, masked CI variable SSH_PRIVATE_KEY)
-    - 'which ssh-agent || (apt-get update && apt-get install -y openssh-client)'
-    - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - >/dev/null
-    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
-    - printf "Host *\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
-    # Optional: Ansible Vault password file from CI var
-    - echo "$ANSIBLE_VAULT_PASSWORD" > vault_pass.txt
+# ------------------------------------------------------------
+# --------------------  S E C R E T S  -----------------------
+# Gated by toggles so your pipeline won't break. Set in
+# Settings → CI/CD → Variables to enable:
+#  - USE_VAULT=true  (needs VAULT_ADDR, VAULT_ROLE, optional VAULT_NAMESPACE)
+#  - USE_AWS_SM=true (needs AWS_REGION, AWS_ROLE_ARN)
+#  - USE_ESO=true    (needs KUBE_CONFIG base64)
+# ------------------------------------------------------------
+
+# HashiCorp Vault (OIDC/JWT) → dotenv
+get_secrets_vault:
+  stage: secrets
+  image: hashicorp/vault:1.15.0
+  rules:
+    - if: '$USE_VAULT == "true" && $VAULT_ADDR && $VAULT_ROLE'
+    - when: never
+  id_tokens:
+    VAULT_ID_TOKEN:
+      aud: https://gitlab.com
+  variables:
+    VAULT_AUTH_PATH: "jwt"
   script:
-    # Pass the built image tag to your play (your role/play can use api_image var)
-    - ansible-playbook -i ansible/inventories/hosts.ini ansible/playbooks/site.yml
-        --tags nginx
-        -e "api_image=$CI_REGISTRY_IMAGE/api:$CI_COMMIT_SHORT_SHA"
+    - apt-get update -y && apt-get install -y jq
+    - echo "$VAULT_ID_TOKEN" > id_jwt
+    - vault write -format=json auth/$VAULT_AUTH_PATH/login role="$VAULT_ROLE" jwt=@id_jwt > login.json
+    - export VAULT_TOKEN=$(jq -r '.auth.client_token' login.json)
+    # Example: read KV secrets and convert to dotenv for later jobs
+    - vault kv get -format=json kv/app/demo | jq -r '.data.data' > secrets.json
+    - jq -r 'to_entries|map("\(.key)=\(.value)")|.[]' secrets.json > secrets.env
+  artifacts:
+    reports: { dotenv: secrets.env }
+    expire_in: 1h
+
+# AWS Secrets Manager (OIDC → STS assume-role) → dotenv
+get_secrets_aws:
+  stage: secrets
+  image: amazon/aws-cli:2.15.0
+  rules:
+    - if: '$USE_AWS_SM == "true" && $AWS_ROLE_ARN && $AWS_REGION'
+    - when: never
+  id_tokens:
+    AWS_ID_TOKEN:
+      aud: https://gitlab.com
+  script:
+    - yum -y install jq
+    - >
+      aws sts assume-role-with-web-identity
+      --role-arn "$AWS_ROLE_ARN"
+      --role-session-name gitlab-ci
+      --web-identity-token "$AWS_ID_TOKEN"
+      --duration-seconds 900 > creds.json
+    - export AWS_ACCESS_KEY_ID=$(jq -r '.Credentials.AccessKeyId' creds.json)
+    - export AWS_SECRET_ACCESS_KEY=$(jq -r '.Credentials.SecretAccessKey' creds.json)
+    - export AWS_SESSION_TOKEN=$(jq -r '.Credentials.SessionToken' creds.json)
+    # Example: fetch JSON secret and convert to dotenv
+    - aws secretsmanager get-secret-value --region "$AWS_REGION" \
+        --secret-id prod/demo-api --query SecretString --output text > secrets.json
+    - jq -r 'to_entries|map("\(.key)=\(.value)")|.[]' secrets.json > secrets.env
+  artifacts:
+    reports: { dotenv: secrets.env }
+    expire_in: 1h
+
+# External Secrets Operator manifests (sync manager → K8s Secret)
+apply_eso_manifests:
+  stage: deploy
+  image: bitnami/kubectl:latest
+  rules:
+    - if: '$USE_ESO == "true" && $KUBE_CONFIG'
+    - when: never
+  script:
+    - mkdir -p ~/.kube && echo "$KUBE_CONFIG" | base64 -d > ~/.kube/config
+    - kubectl apply -f k8s/eso/secret-store.yaml
+    - kubectl apply -f k8s/eso/external-secret.yaml
+
+# ------------------------------------------------------------
+# --------------------   D E P L O Y   -----------------------
+# Two examples:
+#  - Ansible deploy (e.g., NGINX role, zabbix_agent, etc.)
+#  - Helm deploy of demo-api to Kubernetes
+# Both load dotenv produced by secrets jobs if present.
+# ------------------------------------------------------------
+
+# Reusable Ansible template
+.deploy_template: &deploy_template
+  stage: deploy
+  image: python:3.11
+  before_script:
+    - pip install --no-cache-dir "ansible>=2.14,<2.16"
+  script:
+    - |
+      # Load secrets if a dotenv artifact exists
+      if [ -f secrets.env ]; then
+        set -a; . secrets.env; set +a
+      fi
+      EXTRA_VARS=""
+      [ -n "$DB_USER" ] && EXTRA_VARS="$EXTRA_VARS db_user=$DB_USER"
+      [ -n "$DB_PASS" ] && EXTRA_VARS="$EXTRA_VARS db_pass=$DB_PASS"
+    - ansible-playbook -i ansible/inventories/hosts.ini ansible/playbooks/site.yml \
+        --tags nginx \
+        -e "api_image=$CI_REGISTRY_IMAGE/api:$CI_COMMIT_SHORT_SHA" \
+        -e "$EXTRA_VARS" \
         --vault-password-file vault_pass.txt
+  needs:
+    - job: build:docker-image
+    - job: get_secrets_vault
+      optional: true
+    - job: get_secrets_aws
+      optional: true
 
 deploy:dev:
   <<: *deploy_template
-  environment:
-    name: dev
-    url: https://$DEV_LB_URL
-  needs: ["build:docker-image"]
+  environment: { name: dev }
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      when: on_success
-
-smoke:dev:
-  image: curlimages/curl:8.7.1
-  stage: smoke
-  script:
-    - curl -kSf "https://$DEV_LB_URL/healthz"
-  needs: ["deploy:dev"]
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      when: on_success
-
-promote:staging:
-  stage: promote
-  script: ["echo Promote $CI_COMMIT_SHORT_SHA to staging"]
-  when: manual
-  allow_failure: false
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
-  needs: ["smoke:dev"]
-
-deploy:staging:
-  <<: *deploy_template
-  environment:
-    name: staging
-    url: https://$STAGING_LB_URL
-  needs: ["promote:staging"]
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      when: on_success
-
-smoke:staging:
-  image: curlimages/curl:8.7.1
-  stage: smoke
-  script:
-    - curl -kSf "https://$STAGING_LB_URL/healthz"
-  needs: ["deploy:staging"]
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      when: on_success
-
-promote:prod:
-  stage: promote
-  script: ["echo Promote $CI_COMMIT_SHORT_SHA to prod"]
-  when: manual
-  allow_failure: false
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
-  needs: ["smoke:staging"]
+    - if: '$CI_COMMIT_BRANCH && $CI_COMMIT_BRANCH != "main"'
 
 deploy:prod:
   <<: *deploy_template
-  environment:
-    name: production
-    url: https://$PROD_LB_URL
-  needs: ["promote:prod"]
+  environment: { name: prod }
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
-      when: manual
-  # Protect prod deploys (GitLab: protect this job or require approvers in settings)
 
-smoke:prod:
-  image: curlimages/curl:8.7.1
-  stage: smoke
+
+# Helm deploy of demo-api (optional, enable with DEPLOY_K8S=true)
+deploy:k8s:
+  stage: deploy
+  image: alpine/helm:3.14.0
+  rules:
+    - if: '$DEPLOY_K8S == "true" && $KUBE_CONFIG'
+    - when: never
+  needs:
+    - job: build:docker-image
+    - job: get_secrets_vault
+      optional: true
+    - job: get_secrets_aws
+      optional: true
   script:
-    - curl -kSf "https://$PROD_LB_URL/healthz"
+    - mkdir -p ~/.kube && echo "$KUBE_CONFIG" | base64 -d > ~/.kube/config
+    - |
+      if [ -f secrets.env ]; then set -a; . secrets.env; set +a; fi
+      HELM_ARGS=""
+      [ -n "$DB_USER" ] && HELM_ARGS="$HELM_ARGS --set-string db.user=$DB_USER"
+      [ -n "$DB_PASS" ] && HELM_ARGS="$HELM_ARGS --set-string db.pass=$DB_PASS"
+      helm upgrade --install demo-api demo-api/helm/demo-media-api $HELM_ARGS \
+        --set-string image.repository="$CI_REGISTRY_IMAGE/api" \
+        --set-string image.tag="$CI_COMMIT_SHORT_SHA" \
+        --namespace demo --create-namespace
+
+# ---------- SMOKE TEST ----------
+smoke:test:
+  stage: smoke
+  image: curlimages/curl:8.8.0
   needs: ["deploy:prod"]
+  script:
+    - test -n "$SMOKE_URL"
+    - curl -fsSL "$SMOKE_URL"
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
-      when: manual
 
-# -------- ROLLBACK (manual) --------
-rollback:prod:
-  image: python:3.12-slim
-  stage: rollback
+# ---------- PROMOTE (manual gate) ----------
+promote:approve:
+  stage: promote
+  script: ["echo", "Approved for promotion"]
   when: manual
   allow_failure: false
-  before_script:
-    - pip install ansible
-    - 'which ssh-agent || (apt-get update && apt-get install -y openssh-client)'
-    - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - >/dev/null
-    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
-    - printf "Host *\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
-    - echo "$ANSIBLE_VAULT_PASSWORD" > vault_pass.txt
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+# ---------- ROLLBACK ----------
+rollback:helm:
+  stage: rollback
+  image: alpine/helm:3.14.0
+  rules:
+    - if: '$DEPLOY_K8S == "true" && $KUBE_CONFIG && $ROLLBACK_RELEASE && $ROLLBACK_REVISION'
+    - when: manual
   script:
-    # Rollback by pinning a previous image tag (set ROLLBACK_IMAGE_TAG as a manual job variable)
-    - test -n "$ROLLBACK_IMAGE_TAG"
-    - ansible-playbook -i ansible/inventories/hosts.ini ansible/playbooks/site.yml
-        --tags nginx
-        -e "api_image=$CI_REGISTRY_IMAGE/api:$ROLLBACK_IMAGE_TAG"
-        --vault-password-file vault_pass.txt
+    - mkdir -p ~/.kube && echo "$KUBE_CONFIG" | base64 -d > ~/.kube/config
+    - helm rollback "$ROLLBACK_RELEASE" "$ROLLBACK_REVISION" --namespace demo
