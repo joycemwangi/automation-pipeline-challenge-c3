@@ -3,7 +3,7 @@
 # - validate  : lint & static checks
 # - build     : build and push demo-api Docker image
 # - secrets   : fetch short-lived secrets (Vault or AWS SM) or sync via ESO
-# - deploy    : Ansible deploy (NGINX/etc) and/or Helm deploy to Kubernetes
+# - deploy    : Ansible deploy and/or Helm deploy to Kubernetes
 # - smoke     : simple health check
 # - promote   : manual approval / gating
 # - rollback  : Helm rollback + image pinning hooks
@@ -121,19 +121,17 @@ apply_eso_manifests:
     - if: '$USE_ESO == "true" && $KUBE_CONFIG'
     - when: never
   script:
-    - mkdir -p ~/.kube && echo "$KUBE_CONFIG" | base64 -d > ~/.kube/config
-    - kubectl apply -f k8s/eso/secret-store.yaml
-    - kubectl apply -f k8s/eso/external-secret.yaml
+    - mkdir -p ~/.kube
+    - echo "$KUBE_CONFIG" | base64 -d > ~/.kube/config
+    - kubectl apply -f k8s/eso/secret-store-aws.yaml
+    - kubectl apply -f k8s/eso/external-secret-aws.yaml
 
 # ------------------------------------------------------------
 # --------------------   D E P L O Y   -----------------------
-# Two examples:
-#  - Ansible deploy (e.g., NGINX role, zabbix_agent, etc.)
-#  - Helm deploy of demo-api to Kubernetes
+# Reusable Ansible deploy and optional Helm deploy.
 # Both load dotenv produced by secrets jobs if present.
 # ------------------------------------------------------------
 
-# Reusable Ansible template
 .deploy_template: &deploy_template
   stage: deploy
   image: python:3.11
@@ -172,8 +170,7 @@ deploy:prod:
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
 
-
-# Helm deploy of demo-api (optional, enable with DEPLOY_K8S=true)
+# Optional Helm deploy of demo-api (enable with DEPLOY_K8S=true)
 deploy:k8s:
   stage: deploy
   image: alpine/helm:3.14.0
