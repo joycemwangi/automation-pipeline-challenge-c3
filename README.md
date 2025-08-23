@@ -1,10 +1,10 @@
 # **Automation Pipeline Challenge C3**
 
-<p align="center">
-  <a href="="https://github.com/joycemwangi/automation-pipeline-challenge-c3/actions/workflows/lint.yml">
-    <img src="https://github.com/joycemwangi/automation-pipeline-challenge-c3/actions/workflows/lint.yml/badge.svg" alt="Lint status (GitHub Actions)">
-  </a>
-  &nbsp;
+  <a href="https://github.com/joycemwangi/automation-pipeline-challenge-c3/actions/workflows/lint.yml">
+  <img src="https://github.com/joycemwangi/automation-pipeline-challenge-c3/actions/workflows/lint.yml/badge.svg?branch=main" alt="Lint status (GitHub Actions)">
+</a>
+&nbsp;
+  
   <a href="https://codesandbox.io/p/github/joycemwangi/automation-pipeline-challenge-c3/main" target="_blank">
     <img src="https://img.shields.io/badge/Open%20in-CodeSandbox-blue?logo=codesandbox" alt="Open project in CodeSandbox">
   </a>
@@ -158,6 +158,11 @@ The complete pipeline definition is available in [`.gitlab-ci.yml`](https://gith
 - **Encryption at rest** (Vault/AWS SM + K8s EncryptionConfiguration/KMS).  
 - **Least privilege** via IAM/Vault policies; **audit** all access.  
 - Never commit or echo secrets (no secrets in Git, inventories, or logs).
+
+**Pipeline toggles:** enable one path per environment with  
+`USE_VAULT=true` (needs `VAULT_ADDR`, `VAULT_ROLE`),  
+`USE_AWS_SM=true` (needs `AWS_REGION`, `AWS_ROLE_ARN`),  
+or `USE_ESO=true` (needs `KUBE_CONFIG`).
 
 [🔝 Back to Quick Links](#-quick-links)
 
