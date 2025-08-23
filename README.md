@@ -130,7 +130,31 @@ The complete pipeline definition is available in [`.gitlab-ci.yml`](https://gith
   - [values-staging.yaml](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/demo-api/helm/demo-media-api/values-staging.yaml)  
   - [values-prod.yaml](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/demo-api/helm/demo-media-api/values-prod.yaml)  
 - **No Hardcoding** – No passwords, tokens, or keys are stored in playbooks or version control.  
-- **Best Practices** – HTTPS, SSL certificate automation, and RBAC enforce secure deployment pipelines.  
+- **Best Practices** – HTTPS, SSL certificate automation, and RBAC enforce secure deployment pipelines.
+
+  <a id="enterprise-secrets-lifecycle"></a>
+### Enterprise Secrets Lifecycle in CI/CD
+
+**Goals:** eliminate static secrets in Git/CI, use short-lived creds, enable rotation, revocation, and audit.
+
+**Lifecycle**
+1. **Store / Rotate** – Secrets live in Vault or AWS Secrets Manager; rotation/TTL handled there.  
+2. **Authenticate** – GitLab jobs use **OIDC/JWT** (no long-lived keys).  
+3. **Fetch** – CI retrieves secrets at runtime **or** ESO syncs them into a Kubernetes Secret.  
+4. **Use** – Deploys consume secrets via dotenv/env vars, Helm values, or mounted K8s Secrets.  
+5. **Expire / Rotate** – Vault leases expire; AWS SM rotation runs on schedule.  
+6. **Audit** – Vault audit devices / AWS CloudTrail + masked CI logs.
+
+**Integration paths**
+- **Vault (`get_secrets_vault`)** – GitLab OIDC → Vault JWT login → read KV/dynamic creds (short TTL).  
+- **AWS Secrets Manager (`get_secrets_aws`)** – GitLab OIDC → STS assume-role → fetch secret JSON.  
+- **External Secrets Operator (`apply_eso_manifests`)** – Syncs from Vault/AWS SM → **K8s Secret** consumed by the app.
+
+**Security principles**
+- Prefer **OIDC** over static keys; scope by **env** (dev/stage/prod).  
+- **Encryption at rest** (Vault/AWS SM + K8s EncryptionConfiguration/KMS).  
+- **Least privilege** via IAM/Vault policies; **audit** all access.  
+- Never commit or echo secrets (no secrets in Git, inventories, or logs).
 
 [🔝 Back to Quick Links](#-quick-links)
 
