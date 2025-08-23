@@ -55,7 +55,8 @@
 - ⚙️ [CI/CD Pipeline](#cicd-pipeline-gitlab)  
 - 🔒 [Secrets & Config](#secrets-config)  
 - 📊 [Automation Pipeline Diagram](#automation-pipeline-diagram)  
-- 🗂️ [Repository Structure](#repository-structure)  
+- 🗂️ [Repository Structure](#repository-structure)
+- 🔐 [Enterprise Secrets Lifecycle](#enterprise-secrets-lifecycle)
 
 ---
 
@@ -131,6 +132,8 @@ The complete pipeline definition is available in [`.gitlab-ci.yml`](https://gith
   - [values-prod.yaml](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/demo-api/helm/demo-media-api/values-prod.yaml)  
 - **No Hardcoding** – No passwords, tokens, or keys are stored in playbooks or version control.  
 - **Best Practices** – HTTPS, SSL certificate automation, and RBAC enforce secure deployment pipelines.
+
+  [🔝 Back to Quick Links](#-quick-links)
 
   <a id="enterprise-secrets-lifecycle"></a>
 ### Enterprise Secrets Lifecycle in CI/CD
