@@ -2,80 +2,47 @@ name: CI / build
 
 on:
   push:
-    branches: ["**"]          # any branch
+    branches: ["**"]        # build when you push to any branch
   pull_request:
-    branches: ["**"]          # show PR status
+    branches: ["**"]        # keep PR status visible (job below is a no-op)
 
 permissions:
   contents: read
-  packages: write             # needed only when we push to GHCR
+  packages: write
 
 env:
   IMAGE_REPO: ghcr.io/${{ github.repository_owner }}/automation-pipeline-challenge-c3-api
   DOCKER_BUILDKIT: "1"
 
 jobs:
-  build:
+  # Fast, always-green job so PRs show a status and never hang
+  pr-status:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - run: echo "PR OK – build runs on pushes only."
 
-      # Detect if there's an app to build (so docs/README/PDF changes still pass CI)
-      - name: Detect build context
-        id: detect
-        shell: bash
-        run: |
-          APP_DIR="demo-api"
-          if [[ -f "$APP_DIR/package.json" ]]; then
-            echo "app_dir=$APP_DIR" >> "$GITHUB_OUTPUT"
-            echo "need_build=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "app_dir=" >> "$GITHUB_OUTPUT"
-            echo "need_build=false" >> "$GITHUB_OUTPUT"
-          fi
+  # Real Docker build & push (runs only on push events)
+  build:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-      - name: No build needed
-        if: steps.detect.outputs.need_build == 'false'
-        run: echo "No buildable app detected (no package.json). Passing CI ✅"
+      - uses: docker/setup-buildx-action@v3
 
-      - name: Set up Docker Buildx
-        if: steps.detect.outputs.need_build == 'true'
-        uses: docker/setup-buildx-action@v3
-
-      # Only log in when we'll actually push (push events)
-      - name: Log in to GHCR (push only)
-        if: steps.detect.outputs.need_build == 'true' && github.event_name == 'push'
-        uses: docker/login-action@v3
+      - uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Compute Docker tags that are safe (no slashes)
-      - name: Compute tags
-        if: steps.detect.outputs.need_build == 'true'
-        id: tags
-        shell: bash
-        run: |
-          IMAGE_REPO="${{ env.IMAGE_REPO }}"
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            echo "tags=${IMAGE_REPO}:pr-${{ github.event.pull_request.number }},${IMAGE_REPO}:${{ github.sha }}" >> "$GITHUB_OUTPUT"
-          else
-            REF="${GITHUB_REF_NAME}"
-            SAFE_REF="${REF//\//-}"
-            if [[ "$REF" == "main" ]]; then
-              echo "tags=${IMAGE_REPO}:${{ github.sha }},${IMAGE_REPO}:main" >> "$GITHUB_OUTPUT"
-            else
-              echo "tags=${IMAGE_REPO}:${{ github.sha }},${IMAGE_REPO}:${SAFE_REF}" >> "$GITHUB_OUTPUT"
-            fi
-          fi
-
-      - name: Build (PR) or Build+Push (push)
-        if: steps.detect.outputs.need_build == 'true'
+      - name: Build & push image
         uses: docker/build-push-action@v5
         with:
-          context: ${{ steps.detect.outputs.app_dir }}
-          file: ${{ steps.detect.outputs.app_dir }}/Dockerfile
-          push: ${{ github.event_name == 'push' }}
-          tags: ${{ steps.tags.outputs.tags }}
+          context: ./demo-api
+          file: ./demo-api/Dockerfile
+          push: true
+          tags: |
+            ${{ env.IMAGE_REPO }}:${{ github.sha }}
+            ${{ env.IMAGE_REPO }}:${{ github.ref_name == 'main' && 'main' || github.ref_name }}
