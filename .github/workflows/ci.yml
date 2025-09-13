@@ -1,22 +1,75 @@
-name: CI / build
+name: CI
 
 on:
   push:
-    branches: ['**']
+    branches:
+      - main
+      - feature/**
   pull_request:
-    branches: ['**']
+    branches:
+      - main
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
     name: build
-    if: github.event_name == 'push'
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event.pull_request.draft == false
     steps:
-      - run: echo "push build ok"
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-  pr-status:
-    name: pr-status
-    if: github.event_name == 'pull_request'
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Check if build-related files changed
+        id: changed-build
+        uses: tj-actions/changed-files@v45
+        with:
+          files: |
+            src/**
+            package.json
+            package-lock.json
+
+      - name: Install dependencies
+        if: steps.changed-build.outputs.any_changed == 'true'
+        run: npm ci
+
+      - name: Run build
+        if: steps.changed-build.outputs.any_changed == 'true'
+        run: npm run build
+
+  lint:
+    name: lint
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event.pull_request.draft == false
     steps:
-      - run: echo "pr status ok"
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Check if lint-related files changed
+        id: changed-lint
+        uses: tj-actions/changed-files@v45
+        with:
+          files: |
+            src/**
+            .eslintrc*
+            package.json
+
+      - name: Install dependencies
+        if: steps.changed-lint.outputs.any_changed == 'true'
+        run: npm ci
+
+      - name: Run lint
+        if: steps.changed-lint.outputs.any_changed == 'true'
+        run: npm run lint
