@@ -1,22 +1,46 @@
-name: CI / build
+name: CI
 
 on:
   push:
-    branches: ['**']
+    branches: [ main, feature/**, test-branch ]
   pull_request:
-    branches: ['**']
+    branches: [ main ]
 
 jobs:
   build:
     name: build
-    if: github.event_name == 'push'
     runs-on: ubuntu-latest
-    steps:
-      - run: echo "push build ok"
 
-  pr-status:
-    name: pr-status
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
     steps:
-      - run: echo "pr status ok"
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run build
+        run: npm run build
+
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint
