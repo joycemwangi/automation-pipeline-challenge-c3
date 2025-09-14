@@ -7,7 +7,7 @@ on:
 
 permissions:
   contents: read
-  id-token: write        # OIDC for AWS/Vault
+  id-token: write
   packages: read
 
 concurrency:
@@ -15,24 +15,19 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # Cluster / image
   NAMESPACE: demo
-  IMAGE_REPO: ghcr.io/${{ github.repository_owner }}/automation-pipeline-challenge-c3-api
+  IMAGE_REPO: ghcr.io/${{ github.repository_owner }}/automation-pipeline-challenge-c3
 
-  # Feature toggles (set as Repo → Settings → Variables)
-  USE_ESO: ${{ vars.USE_ESO }}           # "true" to apply ESO manifests
-  ESO_BACKEND: ${{ vars.ESO_BACKEND }}   # "aws" or "vault"
+  USE_ESO: ${{ vars.USE_ESO }}
+  ESO_BACKEND: ${{ vars.ESO_BACKEND }}
 
-  # AWS (optional; Variables)
   AWS_REGION: ${{ vars.AWS_REGION }}
   AWS_ROLE_ARN: ${{ vars.AWS_ROLE_ARN }}
 
-  # Vault (optional; Variables)
   VAULT_ADDR: ${{ vars.VAULT_ADDR }}
   VAULT_ROLE: ${{ vars.VAULT_ROLE }}
 
-  # Health check (optional; Variable)
-  SMOKE_URL: ${{ vars.SMOKE_URL }}       # e.g. https://your-app/healthz
+  SMOKE_URL: ${{ vars.SMOKE_URL }}
 
 jobs:
   deploy:
@@ -48,7 +43,7 @@ jobs:
         with:
           version: v3.14.0
 
-      # kubeconfig from secret (base64)
+      # kubeconfig from secret
       - name: Write kubeconfig
         env:
           KCFG: ${{ secrets.KUBE_CONFIG }}
@@ -56,7 +51,7 @@ jobs:
           mkdir -p ~/.kube
           echo "$KCFG" | base64 -d > ~/.kube/config
 
-      # --- External Secrets Operator manifests (optional) ---
+      # Apply ESO manifests if enabled
       - name: Apply External Secrets (AWS)
         if: ${{ env.USE_ESO == 'true' && env.ESO_BACKEND == 'aws' }}
         run: |
@@ -69,7 +64,7 @@ jobs:
           kubectl apply -f k8s/eso/secret-store-vault.yaml
           kubectl apply -f k8s/eso/external-secret-vault.yaml
 
-      # --- AWS Secrets Manager at deploy time (optional, OIDC) ---
+      # AWS OIDC
       - name: Configure AWS OIDC credentials
         if: ${{ env.AWS_ROLE_ARN != '' && env.AWS_REGION != '' }}
         uses: aws-actions/configure-aws-credentials@v4
@@ -89,7 +84,7 @@ jobs:
             --query SecretString --output text \
           | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]' >> $GITHUB_ENV
 
-      # --- Vault at deploy time (optional, OIDC) ---
+      # Vault OIDC
       - name: Read secrets from Vault
         if: ${{ env.VAULT_ADDR != '' && env.VAULT_ROLE != '' }}
         uses: hashicorp/vault-action@v3
@@ -98,15 +93,12 @@ jobs:
           method: jwt
           role: ${{ env.VAULT_ROLE }}
           exportEnv: true
-          # map Vault keys -> env vars (add more lines as needed)
           secrets: |
             kv/data/app/demo db_password | DB_PASSWORD
 
-      # Ensure namespace exists
       - name: Create namespace
         run: kubectl create namespace "$NAMESPACE" --dry-run=client -o yaml | kubectl apply -f -
 
-      # Optional: imagePullSecret for private GHCR images (skips if no token)
       - name: Create imagePullSecret (optional)
         env:
           GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
@@ -121,14 +113,11 @@ jobs:
             echo "GHCR_TOKEN not set; skipping imagePullSecret creation."
           fi
 
-      # Helm deploy (waits & rolls back on failure)
       - name: Helm upgrade/install demo-api
         run: |
           HELM_ARGS=""
-          # pass secrets to Helm if exported above
           if [ -n "${DB_USER}" ]; then HELM_ARGS="$HELM_ARGS --set-string db.user=${DB_USER}"; fi
           if [ -n "${DB_PASSWORD}" ]; then HELM_ARGS="$HELM_ARGS --set-string db.pass=${DB_PASSWORD}"; fi
-          # add pull secret if present
           if kubectl -n "$NAMESPACE" get secret ghcr >/dev/null 2>&1; then
             HELM_ARGS="$HELM_ARGS --set-string imagePullSecrets[0].name=ghcr"
           fi
@@ -140,7 +129,6 @@ jobs:
             --atomic --wait --timeout 5m \
             $HELM_ARGS
 
-      # Smoke test (optional)
       - name: Smoke test
         if: ${{ env.SMOKE_URL != '' }}
         run: curl -fsSL "$SMOKE_URL"
