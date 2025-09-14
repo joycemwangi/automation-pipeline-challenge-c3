@@ -27,9 +27,9 @@ jobs:
         uses: tj-actions/changed-files@v45
         with:
           files: |
-            src/**
-            package.json
-            package-lock.json
+            demo-api/src/**
+            demo-api/package.json
+            demo-api/package-lock.json
           files_ignore: |
             README.md
             docs/**
@@ -42,13 +42,24 @@ jobs:
         with:
           node-version: 18
 
+      - name: Cache npm
+        if: steps.changed.outputs.any_changed == 'true'
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('demo-api/package-lock.json') }}
+          restore-keys: |
+            npm-
+
       - name: Install dependencies
         if: steps.changed.outputs.any_changed == 'true'
         run: npm ci
+        working-directory: demo-api
 
       - name: Run build
         if: steps.changed.outputs.any_changed == 'true'
         run: npm run build
+        working-directory: demo-api
 
   lint:
     name: lint
@@ -63,9 +74,9 @@ jobs:
         uses: tj-actions/changed-files@v45
         with:
           files: |
-            src/**
-            .eslintrc*
-            package.json
+            demo-api/src/**
+            demo-api/.eslintrc*
+            demo-api/package.json
           files_ignore: |
             README.md
             docs/**
@@ -78,10 +89,21 @@ jobs:
         with:
           node-version: 18
 
+      - name: Cache npm
+        if: steps.changed.outputs.any_changed == 'true'
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('demo-api/package-lock.json') }}
+          restore-keys: |
+            npm-
+
       - name: Install dependencies
         if: steps.changed.outputs.any_changed == 'true'
         run: npm ci
+        working-directory: demo-api
 
       - name: Run lint
         if: steps.changed.outputs.any_changed == 'true'
         run: npm run lint
+        working-directory: demo-api
