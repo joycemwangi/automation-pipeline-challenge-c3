@@ -17,7 +17,7 @@ jobs:
   build:
     name: build
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event.pull_request.draft == false
+    # Removed the if: line here
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -53,7 +53,7 @@ jobs:
   lint:
     name: lint
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event.pull_request.draft == false
+    # Removed the if: line here
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
