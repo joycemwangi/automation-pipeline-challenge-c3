@@ -1,87 +1,55 @@
-name: CI
+name: ''
 
 on:
-  push:
-    branches:
-      - main
-      - feature/**
   pull_request:
     branches:
       - main
+    # Only trigger when PR is from these branch name patterns
+    head-branches:
+      - 'feature/**'
+      - 'patch/**'
+      - 'test/**'
 
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build:
-    name: build
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event.pull_request.draft == false
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Detect file changes
-        id: changed
-        uses: tj-actions/changed-files@v45
-        with:
-          files: |
-            src/**
-            package.json
-            package-lock.json
-          files_ignore: |
-            README.md
-            docs/**
-            **/*.md
-            **/*.txt
-
-      - name: Set up Node.js
-        if: steps.changed.outputs.any_changed == 'true'
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        if: steps.changed.outputs.any_changed == 'true'
-        run: npm ci
-
-      - name: Run build
-        if: steps.changed.outputs.any_changed == 'true'
-        run: npm run build
-
   lint:
     name: lint
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event.pull_request.draft == false
+    if: github.event.pull_request.draft == false
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Detect file changes
-        id: changed
-        uses: tj-actions/changed-files@v45
-        with:
-          files: |
-            src/**
-            .eslintrc*
-            package.json
-          files_ignore: |
-            README.md
-            docs/**
-            **/*.md
-            **/*.txt
-
       - name: Set up Node.js
-        if: steps.changed.outputs.any_changed == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
       - name: Install dependencies
-        if: steps.changed.outputs.any_changed == 'true'
         run: npm ci
 
       - name: Run lint
-        if: steps.changed.outputs.any_changed == 'true'
         run: npm run lint
+
+  build:
+    name: build
+    needs: lint
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run build
+        run: npm run build
