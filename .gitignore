@@ -25,7 +25,7 @@ terraform.tfvars
 
 # Node.js
 node_modules/
-package-lock.json
+
 
 # Helm
 *.tgz
