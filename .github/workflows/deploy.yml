@@ -4,6 +4,8 @@ on:
   push:
     branches: ["main"]
   workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 0"   # every Sunday at 00:00 UTC → runs cleanup
 
 permissions:
   contents: read
@@ -36,6 +38,7 @@ env:
 
 jobs:
   deploy:
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -144,3 +147,18 @@ jobs:
       - name: Smoke test
         if: ${{ env.SMOKE_URL != '' }}
         run: curl -fsSL "$SMOKE_URL"
+
+  cleanup:
+    if: github.event_name == 'schedule'
+    name: Cleanup old images
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - name: Delete old images from GHCR (keep last 5)
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: automation-pipeline-challenge-c3
+          package-type: container
+          min-versions-to-keep: 5
