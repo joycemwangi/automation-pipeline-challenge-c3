@@ -53,35 +53,18 @@ jobs:
   lint:
     name: lint
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event.pull_request.draft == false
+    # 👇 Removed the file-change condition so it always runs
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Detect file changes
-        id: changed
-        uses: tj-actions/changed-files@v45
-        with:
-          files: |
-            src/**
-            .eslintrc*
-            package.json
-          files_ignore: |
-            README.md
-            docs/**
-            **/*.md
-            **/*.txt
-
       - name: Set up Node.js
-        if: steps.changed.outputs.any_changed == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
       - name: Install dependencies
-        if: steps.changed.outputs.any_changed == 'true'
         run: npm ci
 
       - name: Run lint
-        if: steps.changed.outputs.any_changed == 'true'
         run: npm run lint
