@@ -40,21 +40,21 @@
 ---
 
 ## 🔗 Quick Links
-- 📝 [Overview](#overview)  
-- 🔧 [Tech Stack](#tech-stack)  
-- 🌟 [Key Features](#key-features)  
-- ⚙️ [CI/CD Pipeline](#cicd-pipeline-gitlab)  
+- 📝 [Overview](#overview)
+- 🔧 [Tech Stack](#tech-stack)
+- 🌟 [Key Features](#key-features)
+- ⚙️ [CI/CD Pipeline](#cicd-pipeline-gitlab)
 - 🔒 [Secrets & Config](#secrets-config)
 - 🔐 [Enterprise Secrets Lifecycle](#enterprise-secrets-lifecycle)
-- 📊 [Automation Pipeline Diagram](#automation-pipeline-diagram)  
+- 📊 [Automation Pipeline Diagram](#automation-pipeline-diagram)
 - 🗂️ [Repository Structure](#repository-structure)
 
 ---
 
 <a id="overview"></a>
 ## **Overview**
-This repository contains the solution for the **Automation Pipeline Challenge C3**, which involves designing and implementing an infrastructure solution for a scalable, secure, and observable client-facing media search and download API service.  
-It reflects a transition toward a modern, containerized environment with automation, reliability, and operational excellence as priorities.  
+This repository contains the solution for the **Automation Pipeline Challenge C3**, which involves designing and implementing an infrastructure solution for a scalable, secure, and observable client-facing media search and download API service.
+It reflects a transition toward a modern, containerized environment with automation, reliability, and operational excellence as priorities.
 
 [🔝 Back to Quick Links](#-quick-links)
 
@@ -62,12 +62,12 @@ It reflects a transition toward a modern, containerized environment with automat
 
 <a id="tech-stack"></a>
 ## 🔧 Tech Stack
-- Infrastructure as Code & Automation: Ansible, Python, Bash  
-- Containerization & Orchestration: Kubernetes, Helm, Docker  
-- Monitoring & Observability: Zabbix Agent (system health and alerting)  
-- CI/CD Pipeline: GitLab CI/CD for validation, build, deploy, smoke testing, and rollback  
-- Web & API Services: Nginx (HTTPS, SSL certs), Node.js demo API  
-- Version Control & Collaboration: GitHub, GitLab, Git  
+- Infrastructure as Code & Automation: Ansible, Python, Bash
+- Containerization & Orchestration: Kubernetes, Helm, Docker
+- Monitoring & Observability: Zabbix Agent (system health and alerting)
+- CI/CD Pipeline: GitLab CI/CD for validation, build, deploy, smoke testing, and rollback
+- Web & API Services: Nginx (HTTPS, SSL certs), Node.js demo API
+- Version Control & Collaboration: GitHub, GitLab, Git
 
 [🔝 Back to Quick Links](#-quick-links)
 
@@ -75,12 +75,12 @@ It reflects a transition toward a modern, containerized environment with automat
 
 <a id="key-features"></a>
 ## 🌟 Key Features
-- End-to-End Automation – Infrastructure provisioning, configuration management, and CI/CD pipeline in one workflow.  
-- Secure by Design – Automated HTTPS, SSL certificate handling, and hardened configurations.  
-- Proactive Monitoring – Integrated Zabbix Agent for real-time health checks and alerting.  
-- Kubernetes-Ready – Helm charts and Kubernetes deployments for scalability across environments.  
-- Resilient Deployments – GitLab pipeline enables validation, smoke testing, gated promotions, and rollback.  
-- Operational Efficiency – Automated OS patching, reboot workflows, and repeatable deployments reduce manual effort.  
+- End-to-End Automation – Infrastructure provisioning, configuration management, and CI/CD pipeline in one workflow.
+- Secure by Design – Automated HTTPS, SSL certificate handling, and hardened configurations.
+- Proactive Monitoring – Integrated Zabbix Agent for real-time health checks and alerting.
+- Kubernetes-Ready – Helm charts and Kubernetes deployments for scalability across environments.
+- Resilient Deployments – GitLab pipeline enables validation, smoke testing, gated promotions, and rollback.
+- Operational Efficiency – Automated OS patching, reboot workflows, and repeatable deployments reduce manual effort.
 
 [🔝 Back to Quick Links](#-quick-links)
 
@@ -89,24 +89,24 @@ It reflects a transition toward a modern, containerized environment with automat
 <a id="cicd-pipeline-gitlab"></a>
 ## ⚙️ CI/CD Pipeline (GitLab)
 
-This project uses **GitLab CI/CD** to automate validation, deployment, and operational checks across environments.  
+This project uses **GitLab CI/CD** to automate validation, deployment, and operational checks across environments.
 
 ### Pipeline Stages
-1. **Validate** – Linting, YAML syntax checks, and static code analysis.  
-2. **Build** – Container image builds for the demo API service.  
-3. **Deploy** – Helm-based deployments to Kubernetes clusters.  
-4. **Smoke Test** – Automated health checks against the deployed service.  
-5. **Promote** – Controlled rollout to staging or production environments.  
-6. **Rollback & Progressive Delivery** –  
-   - **Helm Rollback** – Restore a previous stable release with `helm rollback`.  
-   - **Image Pinning** – Redeploy last-known-good container image tags for recovery.  
-   - **Blue-Green Deployments** – Maintain two environments (Blue = stable, Green = new). Switch traffic to Green after validation; fall back to Blue if issues arise.  
-   - **Canary Releases** – Gradually shift traffic (5% → 25% → 100%) to the new version. Automatically rollback if error rate, latency, or saturation metrics exceed thresholds.  
-   - **Feature Flags** – Decouple deployment from release using toggles to enable/disable features at runtime without redeploying.  
-   - **Monitoring-Driven Automation** – Integrated with Prometheus/Zabbix to track RED/USE metrics. Rollbacks and promotions are triggered by live health checks.  
+1. **Validate** – Linting, YAML syntax checks, and static code analysis.
+2. **Build** – Container image builds for the demo API service.
+3. **Deploy** – Helm-based deployments to Kubernetes clusters.
+4. **Smoke Test** – Automated health checks against the deployed service.
+5. **Promote** – Controlled rollout to staging or production environments.
+6. **Rollback & Progressive Delivery** –
+   - **Helm Rollback** – Restore a previous stable release with `helm rollback`.
+   - **Image Pinning** – Redeploy last-known-good container image tags for recovery.
+   - **Blue-Green Deployments** – Maintain two environments (Blue = stable, Green = new). Switch traffic to Green after validation; fall back to Blue if issues arise.
+   - **Canary Releases** – Gradually shift traffic (5% → 25% → 100%) to the new version. Automatically rollback if error rate, latency, or saturation metrics exceed thresholds.
+   - **Feature Flags** – Decouple deployment from release using toggles to enable/disable features at runtime without redeploying.
+   - **Monitoring-Driven Automation** – Integrated with Prometheus/Zabbix to track RED/USE metrics. Rollbacks and promotions are triggered by live health checks.
 
-This pipeline covers automated validation, gated Kubernetes deployments, and rapid rollback, aligned to modern containerized infrastructure practices.  
-The complete pipeline definition is available in [`.gitlab-ci.yml`](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/.gitlab-ci.yml).  
+This pipeline covers automated validation, gated Kubernetes deployments, and rapid rollback, aligned to modern containerized infrastructure practices.
+The complete pipeline definition is available in [`.gitlab-ci.yml`](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/.gitlab-ci.yml).
 
 [🔝 Back to Quick Links](#-quick-links)
 
@@ -114,14 +114,14 @@ The complete pipeline definition is available in [`.gitlab-ci.yml`](https://gith
 
 <a id="secrets-config"></a>
 ## 🔒 Secrets & Config
-- **Secrets Management** – All sensitive values are stored as masked GitLab CI/CD variables:  
-  `KUBE_CONFIG`, `HELM_REPO_AUTH`, `ANSIBLE_VAULT_PASSWORD`  
+- **Secrets Management** – All sensitive values are stored as masked GitLab CI/CD variables:
+  `KUBE_CONFIG`, `HELM_REPO_AUTH`, `ANSIBLE_VAULT_PASSWORD`
 - **Kubernetes Secrets (optionally sourced via External Secrets Operator from HashiCorp Vault or AWS Secrets Manager)** – Used for sensitive runtime values (certificates, credentials, API tokens); **encrypted at rest** (KMS) and protected by **RBAC**.
-- **Environment-Specific Configs** – Separate Helm values files for each environment:  
-  - [values-dev.yaml](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/demo-api/helm/demo-media-api/values-dev.yaml)  
-  - [values-staging.yaml](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/demo-api/helm/demo-media-api/values-staging.yaml)  
-  - [values-prod.yaml](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/demo-api/helm/demo-media-api/values-prod.yaml)  
-- **No Hardcoding** – No passwords, tokens, or keys are stored in playbooks or version control.  
+- **Environment-Specific Configs** – Separate Helm values files for each environment:
+  - [values-dev.yaml](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/demo-api/helm/demo-media-api/values-dev.yaml)
+  - [values-staging.yaml](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/demo-api/helm/demo-media-api/values-staging.yaml)
+  - [values-prod.yaml](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/demo-api/helm/demo-media-api/values-prod.yaml)
+- **No Hardcoding** – No passwords, tokens, or keys are stored in playbooks or version control.
 - **Best Practices** – HTTPS, SSL certificate automation, and RBAC enforce secure deployment pipelines.
 
   [🔝 Back to Quick Links](#-quick-links)
@@ -132,27 +132,27 @@ The complete pipeline definition is available in [`.gitlab-ci.yml`](https://gith
 **Goals:** eliminate static secrets in Git/CI, use short-lived creds, enable rotation, revocation, and audit.
 
 **Lifecycle**
-1. **Store / Rotate** – Secrets live in Vault or AWS Secrets Manager; rotation/TTL handled there.  
-2. **Authenticate** – GitLab jobs use **OIDC/JWT** (no long-lived keys).  
-3. **Fetch** – CI retrieves secrets at runtime **or** ESO syncs them into a Kubernetes Secret.  
-4. **Use** – Deploys consume secrets via dotenv/env vars, Helm values, or mounted K8s Secrets.  
-5. **Expire / Rotate** – Vault leases expire; AWS SM rotation runs on schedule.  
+1. **Store / Rotate** – Secrets live in Vault or AWS Secrets Manager; rotation/TTL handled there.
+2. **Authenticate** – GitLab jobs use **OIDC/JWT** (no long-lived keys).
+3. **Fetch** – CI retrieves secrets at runtime **or** ESO syncs them into a Kubernetes Secret.
+4. **Use** – Deploys consume secrets via dotenv/env vars, Helm values, or mounted K8s Secrets.
+5. **Expire / Rotate** – Vault leases expire; AWS SM rotation runs on schedule.
 6. **Audit** – Vault audit devices / AWS CloudTrail + masked CI logs.
 
 **Integration paths**
-- **Vault (`get_secrets_vault`)** – GitLab OIDC → Vault JWT login → read KV/dynamic creds (short TTL).  
-- **AWS Secrets Manager (`get_secrets_aws`)** – GitLab OIDC → STS assume-role → fetch secret JSON.  
+- **Vault (`get_secrets_vault`)** – GitLab OIDC → Vault JWT login → read KV/dynamic creds (short TTL).
+- **AWS Secrets Manager (`get_secrets_aws`)** – GitLab OIDC → STS assume-role → fetch secret JSON.
 - **External Secrets Operator (`apply_eso_manifests`)** – Syncs from Vault/AWS SM → **K8s Secret** consumed by the app.
 
 **Security principles**
-- Prefer **OIDC** over static keys; scope by **env** (dev/stage/prod).  
-- **Encryption at rest** (Vault/AWS SM + K8s EncryptionConfiguration/KMS).  
-- **Least privilege** via IAM/Vault policies; **audit** all access.  
+- Prefer **OIDC** over static keys; scope by **env** (dev/stage/prod).
+- **Encryption at rest** (Vault/AWS SM + K8s EncryptionConfiguration/KMS).
+- **Least privilege** via IAM/Vault policies; **audit** all access.
 - Never commit or echo secrets (no secrets in Git, inventories, or logs).
 
-**Pipeline toggles:** enable one path per environment with  
-`USE_VAULT=true` (needs `VAULT_ADDR`, `VAULT_ROLE`),  
-`USE_AWS_SM=true` (needs `AWS_REGION`, `AWS_ROLE_ARN`),  
+**Pipeline toggles:** enable one path per environment with
+`USE_VAULT=true` (needs `VAULT_ADDR`, `VAULT_ROLE`),
+`USE_AWS_SM=true` (needs `AWS_REGION`, `AWS_ROLE_ARN`),
 or `USE_ESO=true` (needs `KUBE_CONFIG`).
 
 [🔝 Back to Quick Links](#-quick-links)
@@ -362,3 +362,4 @@ Note: Local validation works without extra setup.
 
 <!-- lint demo -->
 Test branch protection
+# cleanup
