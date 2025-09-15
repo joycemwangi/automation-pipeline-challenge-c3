@@ -1,6 +1,7 @@
 {
   "name": "automation-pipeline-challenge-c3",
   "version": "1.0.0",
+  "type": "module", 
   "description": "<!-- Badges (centered) --> <p align=\"center\">   <a href=\"https://github.com/joycemwangi/automation-pipeline-challenge-c3/actions/workflows/lint.yml\">     <img src=\"https://github.com/joycemwangi/automation-pipeline-challenge-c3/actions/workflows/lint.yml/badge.svg?branch=main\" alt=\"Lint status (GitHub Actions)\">   </a>   &nbsp;   <a href=\"https://codesandbox.io/p/github/joycemwangi/automation-pipeline-challenge-c3/main\" target=\"_blank\">     <img src=\"https://img.shields.io/badge/Open%20in-CodeSandbox-blue?logo=codesandbox\" alt=\"Open in CodeSandbox\">   </a>   &nbsp;   <a href=\"https://kncqz4-8080.csb.app/healthz\" target=\"_blank\">     <img src=\"https://img.shields.io/badge/Live%20Demo-OK-green\" alt=\"Live Demo (/healthz)\">   </a> </p>",
   "main": "index.js",
   "directories": {
@@ -77,12 +78,13 @@
     "yocto-queue": "^0.1.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.35.0",
     "eslint": "^9.35.0"
   },
   "scripts": {
-  "build": "echo \"Build step placeholder\"",
-  "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-  "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "echo \"Build step placeholder\"",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
