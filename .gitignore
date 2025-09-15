@@ -73,3 +73,4 @@ ansible/roles/nginx/tasks/main.yml.bak
 
 # don’t commit installed Galaxy content
 ansible/collections/ansible_collections/
+\!package-lock.json
